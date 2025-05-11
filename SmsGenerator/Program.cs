@@ -32,6 +32,18 @@ namespace SmsGenerator
 
             return a;
         }
+
+        //функция Эйлера для подсчета количества делителей n
+        static List<int> EulerFunction(int n)
+        {
+            List<int> list = new List<int>();
+            for (int i = 1; i <= n; i++)
+                if (n % i == 0)
+                    list.Add(i);
+            return list;
+        }
+
+
         static void Main(string[] args)
         {
             //Рандомная генерация взаимнопростых чисел
@@ -45,6 +57,9 @@ namespace SmsGenerator
             //Только для разработчиков(строку не должен видеть пользователь)
             Console.WriteLine($"a = {a}, n = {n} — взаимно простые!");
 
+            //делители n
+            var divs = EulerFunction(n);
+            Console.WriteLine($"Делители n ({divs.Count} шт.): {string.Join(", ", divs)}");
 
             int codeLength = ReadInput("Введите длину одного кода (в цифрах):");
             int codeNumber = ReadInput("Сколько кодов сгенерировать?");
