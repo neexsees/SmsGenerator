@@ -37,18 +37,33 @@ namespace SmsGenerator
         //функция Эйлера для вычисляет сколько взаимно простых чисел есть  с заданным числом
         static long EulerFunction(long n)
         {
-            long cnt = 0;
-            for (long i = 1; i <= n; i++)
-                if (EuclidsAlgorithm(i, n) == 1) cnt++;
-            return cnt;
+            long result = n;
+            for (long p = 2; p * p <= n; ++p)
+            {
+                if (n % p == 0)
+                {
+                    while (n % p == 0)
+                        n /= p;
+                    result -= result / p;
+                }
+            }
+            if (n > 1)
+                result -= result / n;
+            return result;
         }
 
         //Возведение в степень
         static long PowMod(long a, long k, long n)
         {
             long res = 1;
-            for (long i = 0; i < k; i++)
-                res = (res * a) % n;
+            a %= n;
+            while (k > 0)
+            {
+                if ((k & 1) == 1)
+                    res = (res * a) % n;
+                a = (a * a) % n;
+                k >>= 1;
+            }
             return res;
         }
 
