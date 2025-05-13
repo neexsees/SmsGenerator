@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SmsGenerator
 {
-    class Program
+    class Generator
     {
         static Random rnd = new Random();
 
@@ -141,15 +141,7 @@ namespace SmsGenerator
 
         static void Main(string[] args)
         {
-            //Рандомная генерация взаимнопростых чисел
-
-            long codeLength = ReadInput("Введите длину одного кода от 1 до 9: ");
-            while (codeLength < 1 || codeLength > 9)
-            {
-                Console.WriteLine("Длина кода должна быть от 1 до 9 цифр!");
-                codeLength = ReadInput("Введите длину одного кода от 1 до 9: ");
-            }
-
+            long codeLength = ReadInput("Введите длину одного кода:");
             long codeCount = ReadInput("Сколько кодов сгенерировать? ");
 
             // Подбираем подходящие параметры a и n

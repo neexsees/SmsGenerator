@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35818.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsGenerator", "SmsGenerator\SmsGenerator.csproj", "{5FE2DC73-5826-4AE4-83BC-4A04BC1B3E61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsGeneratorApp", "SmsGeneratorApp\SmsGeneratorApp.csproj", "{D7108B7A-8973-40AD-BB8A-6E8451A243ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5FE2DC73-5826-4AE4-83BC-4A04BC1B3E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FE2DC73-5826-4AE4-83BC-4A04BC1B3E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FE2DC73-5826-4AE4-83BC-4A04BC1B3E61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7108B7A-8973-40AD-BB8A-6E8451A243ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7108B7A-8973-40AD-BB8A-6E8451A243ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7108B7A-8973-40AD-BB8A-6E8451A243ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7108B7A-8973-40AD-BB8A-6E8451A243ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
