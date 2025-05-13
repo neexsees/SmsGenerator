@@ -1,25 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-
-namespace SmsGenerator
+namespace SmsGeneratorApp
 {
-    class Generator
+    public static class CodeGenerator
     {
         static Random rnd = new Random();
-
-        //функция для проверки пользовательского ввода
-        static long ReadInput(string request)
-        {
-            Console.WriteLine(request);
-            long validInput;
-            while (!long.TryParse(Console.ReadLine(), out validInput) || validInput <=0)
-            {
-                Console.WriteLine("Неверный ввод! Введите целое положительное число!");
-            }
-
-            return validInput;
-        }
 
         //Расчет НОД
         static long EuclidsAlgorithm(long a, long n)
@@ -68,7 +57,6 @@ namespace SmsGenerator
         }
 
         //Создание кодов
-
         static List<long> MakeCodes(long a, long n, long len, long amount)
         {
             long phi = EulerFunction(n);
@@ -88,7 +76,7 @@ namespace SmsGenerator
                 if (value >= min && value <= maxPossible)
                     codes.Add(value);
 
-                tries++; 
+                tries++;
             }
 
             if (codes.Count < amount)
@@ -133,40 +121,11 @@ namespace SmsGenerator
                             continue;
                         }
                     }
-                }         
+                }
             }
 
             return false;
         }
 
-        static void Main(string[] args)
-        {
-            long codeLength = ReadInput("Введите длину одного кода:");
-            long codeCount = ReadInput("Сколько кодов сгенерировать? ");
-
-            // Подбираем подходящие параметры a и n
-            if (!FindSuitableParameters(codeLength, codeCount, out long a, out long n))
-            {
-                Console.WriteLine("Не удалось найти подходящие параметры для генерации запрошенного количества кодов.");
-                return;
-            }
-
-            Console.WriteLine($"a = {a}, n = {n} — взаимно-простые");
-
-            Console.WriteLine($"Функция Эйлера φ(n) = {EulerFunction(n)}");
-            Console.WriteLine($"Минимальное значение: {Math.Pow(10, codeLength - 1)}, Максимальное: {Math.Pow(10, codeLength) - 1}");
-
-            try
-            {
-                var codes = MakeCodes(a, n, codeLength, codeCount);
-
-                Console.WriteLine($"\nГотово! Сгенерировано {codes.Count} уникальных {codeLength}-значных кодов:");
-                foreach (var c in codes) Console.WriteLine(c.ToString().PadLeft((int)codeLength, '0'));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка: {ex.Message}");
-            }
-        }
     }
 }
