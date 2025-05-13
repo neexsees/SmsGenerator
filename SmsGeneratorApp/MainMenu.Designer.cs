@@ -25,5 +25,8 @@
         private Button button1;
         private TextBox textBox1;
         private TextBox textBox2;
+        private Label titleText;
+        private RoundLabel titleLabel;
+        private Label lengthLabel;
     }
 }
