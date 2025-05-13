@@ -57,7 +57,7 @@ namespace SmsGeneratorApp
         }
 
         //Создание кодов
-        static List<long> MakeCodes(long a, long n, long len, long amount)
+        public static List<long> MakeCodes(long a, long n, long len, long amount)
         {
             long phi = EulerFunction(n);
             long min = 1;
@@ -85,7 +85,7 @@ namespace SmsGeneratorApp
             return new List<long>(codes);
         }
 
-        static bool FindSuitableParameters(long len, long amount, out long a, out long n)
+        public static bool FindSuitableParameters(long len, long amount, out long a, out long n)
         {
             a = 0;
             n = 0;

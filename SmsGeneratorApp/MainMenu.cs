@@ -135,8 +135,22 @@ namespace SmsGeneratorApp
         {
             if (TryGetLength(out long length) && TryGetCount(out long count))
             {
-                MessageBox.Show($"Длина кода: {length}\nКоличество: {count}", "Успех",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (!CodeGenerator.FindSuitableParameters(length, count, out long a, out long n))
+                {
+                    MessageBox.Show("Не удалось найти параметры a и n.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                try
+                {
+                    var codes = CodeGenerator.MakeCodes(a, n, length, count);
+                    var resultForm = new Result(codes);
+                    resultForm.Show(); 
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка генерации: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
