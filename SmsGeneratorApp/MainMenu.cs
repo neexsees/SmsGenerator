@@ -1,4 +1,6 @@
 
+using System.Diagnostics;
+
 namespace SmsGeneratorApp
 {
     public partial class MainMenu : Form
@@ -163,27 +165,41 @@ namespace SmsGeneratorApp
         }
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
-            string chmPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\SmsGeneratorApp";
-            if (!File.Exists(chmPath))
+            string pdfPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\UserGuide.pdf";
+            if (File.Exists(pdfPath))
             {
-                MessageBox.Show("Файл справки не найден: " + chmPath,
-                                "Ошибка",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                return;
+                System.Diagnostics.Process.Start(new ProcessStartInfo()
+                {
+                    FileName = pdfPath,
+                    UseShellExecute = true
+                });
+            }
+            else
+            {
+                MessageBox.Show("Файл PDF не найден.");
+            }
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.F1)
+            {
+                string pdfPath = @"C:\Users\Redmi\Desktop\hse\docs\UserGuide.pdf";
+                if (File.Exists(pdfPath))
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = pdfPath,
+                        UseShellExecute = true
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("Файл справки не найден.");
+                }
+                return true;
             }
 
-            try
-            {
-                System.Diagnostics.Process.Start("hh.exe", chmPath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Не удалось открыть справку:\n" + ex.Message,
-                                "Ошибка",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
