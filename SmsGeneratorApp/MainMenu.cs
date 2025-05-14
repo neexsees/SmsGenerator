@@ -20,22 +20,12 @@ namespace SmsGeneratorApp
         {
             lengthLabel = new Label();
             lengthInput = new RoundedTextBox();
+            titleLabel = new RoundLabel();
+            countLabel = new Label();
+            countInput = new RoundedTextBox();
+            generateButton = new RoundedButton();
+            buttonHelp = new Button();
             SuspendLayout();
-            // Заголовок
-            titleLabel = new RoundLabel
-            {
-                BorderColor = Color.FromArgb(0, 51, 102),
-                BorderWidth = 8,
-                CornerRadius = 20,
-                FillColor = Color.FromArgb(240, 240, 240),
-                Font = new Font("Segoe UI", 16F, FontStyle.Bold),
-                Location = new Point(180, 30),
-                Size = new Size(900, 60),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Text = "Генератор псевдослучайных SMS-кодов"
-            };
-            Controls.Add(titleLabel);
-            //Текст перед вводом длины
             // 
             // lengthLabel
             // 
@@ -43,10 +33,9 @@ namespace SmsGeneratorApp
             lengthLabel.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
             lengthLabel.Location = new Point(331, 180);
             lengthLabel.Name = "lengthLabel";
-            lengthLabel.Size = new Size(501, 65);
+            lengthLabel.Size = new Size(314, 41);
             lengthLabel.TabIndex = 0;
             lengthLabel.Text = "Введите длину кода";
-            //Ввод длины
             // 
             // lengthInput
             // 
@@ -56,58 +45,80 @@ namespace SmsGeneratorApp
             lengthInput.Padding = new Padding(10);
             lengthInput.Size = new Size(500, 81);
             lengthInput.TabIndex = 1;
-            //Текст для ввод количества
-            countLabel = new Label();
+            lengthInput.Load += lengthInput_Load;
+            // 
+            // titleLabel
+            // 
+            titleLabel.BorderColor = Color.FromArgb(0, 51, 102);
+            titleLabel.BorderWidth = 3;
+            titleLabel.CornerRadius = 20;
+            titleLabel.FillColor = Color.FromArgb(240, 240, 240);
+            titleLabel.Font = new Font("Segoe UI", 16F, FontStyle.Bold, GraphicsUnit.Point);
+            titleLabel.Location = new Point(0, 0);
+            titleLabel.Name = "titleLabel";
+            titleLabel.Size = new Size(700, 60);
+            titleLabel.TabIndex = 0;
+            titleLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // countLabel
+            // 
             countLabel.AutoSize = true;
             countLabel.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
-            countLabel.Location = new Point(280, 360); 
+            countLabel.Location = new Point(280, 360);
             countLabel.Name = "countLabel";
-            countLabel.Size = new Size(501, 65);
+            countLabel.Size = new Size(412, 41);
             countLabel.TabIndex = 2;
             countLabel.Text = "Введите количество кодов";
-            //Ввод количества
-            countInput = new RoundedTextBox();
+            // 
+            // countInput
+            // 
             countInput.BackColor = Color.Transparent;
             countInput.Location = new Point(331, 430);
             countInput.Name = "countInput";
             countInput.Padding = new Padding(10);
             countInput.Size = new Size(500, 81);
             countInput.TabIndex = 3;
-
-            Controls.Add(countLabel);
-            Controls.Add(countInput);
-            //Кнопка генерации
-            generateButton = new RoundedButton
-            {
-                Text = "Сгенерировать",
-                Location = new Point(440, 550),
-                Size = new Size(300, 60),
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                BackColor = Color.White,      
-                ForeColor = Color.Black,         
-                BorderColor = Color.FromArgb(0, 51, 102),
-                BorderThickness = 3,
-                CornerRadius = 25
-            };
+            // 
+            // generateButton
+            // 
+            generateButton.BackColor = Color.White;
+            generateButton.BorderColor = Color.FromArgb(0, 51, 102);
+            generateButton.BorderThickness = 3;
+            generateButton.CornerRadius = 25;
+            generateButton.FlatStyle = FlatStyle.Flat;
+            generateButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            generateButton.ForeColor = Color.Black;
+            generateButton.HoverBackColor = Color.FromArgb(230, 230, 230);
+            generateButton.Location = new Point(0, 0);
+            generateButton.Name = "generateButton";
+            generateButton.Size = new Size(200, 60);
+            generateButton.TabIndex = 4;
+            generateButton.UseVisualStyleBackColor = false;
             generateButton.Click += GenerateButton_Click;
-            Controls.Add(generateButton);
+            // 
+            // buttonHelp
+            // 
+            buttonHelp.Location = new Point(50, 700);
+            buttonHelp.Name = "buttonHelp";
+            buttonHelp.Size = new Size(200, 50);
+            buttonHelp.TabIndex = 5;
+            buttonHelp.Text = "Помощь";
+            buttonHelp.Click += ButtonHelp_Click;
             // 
             // MainMenu
             // 
             ClientSize = new Size(1200, 800);
+            Controls.Add(titleLabel);
+            Controls.Add(countLabel);
+            Controls.Add(countInput);
+            Controls.Add(generateButton);
             Controls.Add(lengthInput);
             Controls.Add(lengthLabel);
+            Controls.Add(buttonHelp);
             Name = "MainMenu";
             Text = "Генератор SMS-кодов";
             ResumeLayout(false);
             PerformLayout();
-
-            buttonHelp = new Button();
-            buttonHelp.Text = "Помощь";
-            buttonHelp.Size = new Size(200, 50);
-            buttonHelp.Location = new Point(50, 700); 
-            buttonHelp.Click += ButtonHelp_Click;
-            Controls.Add(buttonHelp);
 
         }
         private bool TryGetLength(out long codeLength)
@@ -155,7 +166,7 @@ namespace SmsGeneratorApp
                 {
                     var codes = CodeGenerator.MakeCodes(a, n, length, count);
                     var resultForm = new Result(codes);
-                    resultForm.Show(); 
+                    resultForm.Show();
                 }
                 catch (Exception ex)
                 {
@@ -183,12 +194,12 @@ namespace SmsGeneratorApp
         {
             if (keyData == Keys.F1)
             {
-                string pdfPath = @"C:\Users\Redmi\Desktop\hse\docs\UserGuide.pdf";
-                if (File.Exists(pdfPath))
+                string chmPath = @"C:\Users\Саша\source\repos\SmsGenerator\контекстная справка. Марьина В.ФеденеваА.РИС-24-1.chm";
+                if (File.Exists(chmPath))
                 {
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = pdfPath,
+                        FileName = chmPath,
                         UseShellExecute = true
                     });
                 }
@@ -200,6 +211,11 @@ namespace SmsGeneratorApp
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void lengthInput_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
