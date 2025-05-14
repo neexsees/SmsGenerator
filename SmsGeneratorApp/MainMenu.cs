@@ -7,6 +7,7 @@ namespace SmsGeneratorApp
         private RoundedTextBox countInput;
         private Label countLabel;
         private RoundedButton generateButton;
+        private Button buttonHelp;
         public MainMenu()
         {
             InitializeComponent();
@@ -99,6 +100,13 @@ namespace SmsGeneratorApp
             ResumeLayout(false);
             PerformLayout();
 
+            buttonHelp = new Button();
+            buttonHelp.Text = "Помощь";
+            buttonHelp.Size = new Size(200, 50);
+            buttonHelp.Location = new Point(50, 700); 
+            buttonHelp.Click += ButtonHelp_Click;
+            Controls.Add(buttonHelp);
+
         }
         private bool TryGetLength(out long codeLength)
         {
@@ -151,6 +159,30 @@ namespace SmsGeneratorApp
                 {
                     MessageBox.Show("Ошибка генерации: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+        private void ButtonHelp_Click(object sender, EventArgs e)
+        {
+            string chmPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\SmsGeneratorApp";
+            if (!File.Exists(chmPath))
+            {
+                MessageBox.Show("Файл справки не найден: " + chmPath,
+                                "Ошибка",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start("hh.exe", chmPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось открыть справку:\n" + ex.Message,
+                                "Ошибка",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             }
         }
     }
