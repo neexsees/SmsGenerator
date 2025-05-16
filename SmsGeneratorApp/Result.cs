@@ -1,5 +1,7 @@
 ﻿
 
+using System.Diagnostics;
+
 namespace SmsGeneratorApp
 {
     public partial class Result: Form
@@ -117,7 +119,28 @@ namespace SmsGeneratorApp
                 }
             };
             Controls.Add(exportButton);
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.F1)
+            {
+                string chmPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\UserGuide.chm";
+                if (File.Exists(chmPath))
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = chmPath,
+                        UseShellExecute = true
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("Файл справки не найден.");
+                }
+                return true;
+            }
 
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 

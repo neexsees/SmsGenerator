@@ -165,30 +165,30 @@ namespace SmsGeneratorApp
         }
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
-            string pdfPath = @"C:\Users\Redmi\Desktop\hse\1  ”–—\ ”–—¿◊\SmsGenerator\UserGuide.pdf";
-            if (File.Exists(pdfPath))
+            string chmPath = @"C:\Users\Redmi\Desktop\hse\1  ”–—\ ”–—¿◊\SmsGenerator\UserGuide.chm";
+            if (File.Exists(chmPath))
             {
                 System.Diagnostics.Process.Start(new ProcessStartInfo()
                 {
-                    FileName = pdfPath,
+                    FileName = chmPath,
                     UseShellExecute = true
                 });
             }
             else
             {
-                MessageBox.Show("‘‡ÈÎ PDF ÌÂ Ì‡È‰ÂÌ.");
+                MessageBox.Show("‘‡ÈÎ ÌÂ Ì‡È‰ÂÌ.");
             }
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.F1)
             {
-                string pdfPath = @"C:\Users\Redmi\Desktop\hse\docs\UserGuide.pdf";
-                if (File.Exists(pdfPath))
+                string chmPath = @"C:\Users\Redmi\Desktop\hse\1  ”–—\ ”–—¿◊\SmsGenerator\UserGuide.chm";
+                if (File.Exists(chmPath))
                 {
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = pdfPath,
+                        FileName = chmPath,
                         UseShellExecute = true
                     });
                 }
