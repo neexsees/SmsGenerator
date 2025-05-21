@@ -67,7 +67,7 @@ namespace SmsGeneratorApp
             if (min > maxPossible)
                 throw new ArgumentException($"При n = {n} невозможно получить {len}-значные остатки.");
             var codes = new HashSet<long>();
-            long tries = 0, limit = amount * 100; //исключение цикла
+            long tries = 0, limit = amount * 1000; //исключение цикла
             while (codes.Count < amount && tries < limit)
             {
                 long k = rnd.Next(1, (int)(phi > int.MaxValue ? int.MaxValue : phi + 1));
@@ -80,7 +80,7 @@ namespace SmsGeneratorApp
             }
 
             if (codes.Count < amount)
-                Console.WriteLine($"Предупреждение: удалось набрать только {codes.Count} уникальных кодов.");
+                throw new ArgumentException($"Предупреждение: удалось набрать только {codes.Count} уникальных кодов.");
 
             return new List<long>(codes);
         }
