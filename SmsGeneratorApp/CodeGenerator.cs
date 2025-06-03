@@ -23,9 +23,21 @@ namespace SmsGeneratorApp
             return a;
         }
 
+        //Добавление проверки простоты чисел
+        static bool IsPrime(long num)
+        {
+            if (num <= 1) return false;
+            for (long i = 2; i * i <= num; i++)
+                if (num % i == 0) return false;
+            return true;
+        }
+
         //функция Эйлера для вычисляет сколько взаимно простых чисел есть  с заданным числом
         static long EulerFunction(long n)
         {
+            if (IsPrime(n)) return n - 1;
+
+            // Стандартный расчет для составных чисел
             long result = n;
             for (long p = 2; p * p <= n; ++p)
             {
