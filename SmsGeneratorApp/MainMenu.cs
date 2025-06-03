@@ -115,9 +115,9 @@ namespace SmsGeneratorApp
             codeLength = 0;
             string input = lengthInput.Text.Trim();
 
-            if (!long.TryParse(input, out long value) || value <= 0)
+            if (!long.TryParse(input, out long value) || value <= 0 || value >= 10)
             {
-                MessageBox.Show("¬ведите корректную длину кода (целое положительное число).",
+                MessageBox.Show("¬ведите корректную длину кода (целое положительное число меньше 10).",
                     "ќшибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
