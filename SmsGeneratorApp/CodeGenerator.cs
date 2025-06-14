@@ -1,11 +1,39 @@
 ﻿
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+
 namespace SmsGeneratorApp
 {
     public static class CodeGenerator
     {
         static Random rnd = new Random();
 
-        //Расчет НОД
+        //Метод "грубой силы" для проверки простоты числа
+        public static int FindPrimeByBruteForce(int min, int max)
+        {
+            while (true)
+            {
+                int q = rnd.Next(min, max);
+                if (q % 2 == 0)
+                    q++;
+
+                bool isPrime = true;
+                int qSqrt = (int)Math.Sqrt(q);
+
+                for (int i = 2; i <= qSqrt; i++)
+                {
+                    if (q % i == 0)
+                    {
+                        isPrime = false;
+                        break;
+                    }
+                }
+
+                if (isPrime)
+                    return 1;
+            }
+        }
+
+        //Проверка взаимной простоты числел
         public static bool MutualSimplicity(int a, int b)
         {
             if (a < b)
@@ -25,7 +53,9 @@ namespace SmsGeneratorApp
             return a == 1;
         }
 
-        //Добавление проверки простоты чисел
+        
+
+        //Добавление проверки простоты чисел ДЕЛИМ НА 2, НАДО ЧТОБЫ БЫЛО РЕШЕТО И ГРУБАЯ СИЛА
         static bool IsPrime(long num)
         {
             if (num <= 1) return false;
