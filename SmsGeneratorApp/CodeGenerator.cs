@@ -5,6 +5,62 @@ namespace SmsGeneratorApp
     {
         static Random rnd = new Random();
 
+        // Метод для нахождения первых 2N простых чисел с помощью Решета Эратосфена
+        public static int[] GenerateFirst2NPrimes(int NumberOfCodes)
+        {
+            if (NumberOfCodes <= 0) return new int[0];
+
+            // Оценка верхней границы для 2N простых чисел 
+            int upperBound = NumberOfCodes > 6 ? (int)(2 * NumberOfCodes * Math.Log(2 * NumberOfCodes) + 2 * NumberOfCodes * Math.Log(Math.Log(2 * NumberOfCodes))) : 20;
+
+            bool[] isPrime = new bool[upperBound + 1];
+            for (int i = 2; i <= upperBound; i++) isPrime[i] = true;
+
+            for (int p = 2; p * p <= upperBound; p++)
+            {
+                if (isPrime[p])
+                {
+                    for (int i = p * p; i <= upperBound; i += p)
+                    {
+                        isPrime[i] = false;
+                    }
+                }
+            }
+
+            List<int> primes = new List<int>();
+            for (int i = 2; i <= upperBound && primes.Count < 2 * NumberOfCodes; i++)
+            {
+                if (isPrime[i]) primes.Add(i);
+            }
+
+            // Если не набрали достаточно простых чисел, увеличиваем границу и повторяем
+            while (primes.Count < 2 * NumberOfCodes)
+            {
+                upperBound *= 2;
+                isPrime = new bool[upperBound + 1];
+                for (int i = 2; i <= upperBound; i++) isPrime[i] = true;
+
+                for (int p = 2; p * p <= upperBound; p++)
+                {
+                    if (isPrime[p])
+                    {
+                        for (int i = p * p; i <= upperBound; i += p)
+                        {
+                            isPrime[i] = false;
+                        }
+                    }
+                }
+
+                primes.Clear();
+                for (int i = 2; i <= upperBound && primes.Count < 2 * NumberOfCodes; i++)
+                {
+                    if (isPrime[i]) primes.Add(i);
+                }
+            }
+
+            return primes.GetRange(0, 2 * NumberOfCodes).ToArray();
+        }
+
         //Метод "грубой силы" для проверки простоты числа
         public static int FindPrimeByBruteForce(int min, int max)
         {
