@@ -246,76 +246,50 @@ namespace SmsGeneratorApp
             return res;
         }
 
-        //Создание кодов
-        public static List<long> MakeCodes(long a, long n, long len, long amount)
+        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes, out long m, out long a, out List<long> usedK)
         {
-            long phi = EulerFunction(n);
-            long min = 1;
-            for (int i = 1; i < len; i++) min *= 10;
-            long maxPossible = Math.Min(n - 1, (long)Math.Pow(10, len) - 1);
 
-            if (min > maxPossible)
-                throw new ArgumentException($"При n = {n} невозможно получить {len}-значные остатки.");
-            var codes = new HashSet<long>();
-            long tries = 0, limit = amount * 1000; //исключение цикла
-            while (codes.Count < amount && tries < limit)
+            long phi;
+            List<long> phiDivisors;
+            m = FindValidModulus(lengthCode, numberOfCodes, out phi, out phiDivisors);
+            long mLocal = m;
+            int[] allPrimes = GenerateFirst2NPrimes(numberOfCodes * 100);
+            //диапазон для lengthCode-разрядных чисел
+            int minA = (int)Math.Pow(10, lengthCode - 1);
+            int maxA = (int)Math.Pow(10, lengthCode) - 1;
+
+            // Отбираем те, что нужной длины и взаимно просты с m
+            var validA = allPrimes.Where(p => p >= minA && p <= maxA && MutualSimplicity(p, (int)mLocal)).ToList();
+
+            if (validA.Count == 0)
+                throw new Exception("Не найдено подходящего простого числа a.");
+
+            // Случайный выбор a
+            a = validA[rnd.Next(validA.Count)];
+
+            // Генерируем B и G, получаем k-массив
+            var (B, G) = GeneratePrimesBG(numberOfCodes);
+            usedK = CalculateKValues(B, G);
+
+            // Вычисляем коды: a^k mod m
+            var seen = new HashSet<long>();
+            var codes = new List<long>();
+
+            foreach (var k in usedK)
             {
-                long k = rnd.Next(1, (int)(phi > int.MaxValue ? int.MaxValue : phi + 1));
-                long value = PowMod(a, k, n);
-
-                if (value >= min && value <= maxPossible)
-                    codes.Add(value);
-
-                tries++;
-            }
-
-            if (codes.Count < amount)
-                throw new ArgumentException($"Предупреждение: удалось набрать только {codes.Count} уникальных кодов.");
-
-            return new List<long>(codes);
-        }
-
-        public static bool FindSuitableParameters(long len, long amount, out long a, out long n)
-        {
-            a = 0;
-            n = 0;
-
-            long minN = (long)Math.Pow(10, len - 1);
-            long maxN = (long)Math.Pow(10, len) - 1;
-
-            for (long candidateN = maxN; candidateN >= minN; candidateN--)
-            {
-                if (candidateN % 2 == 0) continue;// Проверяем только нечетные числа (увеличивает шансы на взаимную простоту)
-
-                long phi = EulerFunction(candidateN);
-                if (phi < amount) continue;// Если количество возможных кодов меньше требуемого, пропускаем
-
-                // Пытаемся найти подходящее a
-                for (long attempt = 0; attempt < 100; attempt++)
+                long code = PowMod(a, k, m);
+                if (seen.Add(code)) // Добавит только уникальные
                 {
-                    long candidateA = rnd.Next(2, (int)(candidateN > int.MaxValue ? int.MaxValue : candidateN));
-                    if (MutualSimplicity(candidateA, candidateN) == 1)
-                    {
-                        try // Проверяем, можно ли получить достаточно кодов с этими параметрами
-                        {
-                            var testCodes = MakeCodes(candidateA, candidateN, len, amount);
-                            if (testCodes.Count == amount)
-                            {
-                                a = candidateA;
-                                n = candidateN;
-                                return true;
-                            }
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
+                    codes.Add(code);
+                    if (codes.Count == numberOfCodes)
+                        break;
                 }
             }
 
-            return false;
-        }
+            if (codes.Count < numberOfCodes)
+                throw new Exception("Недостаточно уникальных кодов. Попробуйте изменить параметры.");
 
+            return codes;
+        }
     }
 }
