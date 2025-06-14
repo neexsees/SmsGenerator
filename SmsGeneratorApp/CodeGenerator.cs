@@ -72,6 +72,50 @@ namespace SmsGeneratorApp
             return primes[randomIndex];
         }
 
+        // Метод для генерации простых чисел B и G
+        public static (int B, int G) GeneratePrimesBG(int numberOfCodes)
+        {
+            // Генерируем простые числа, пока не найдем подходящие
+            while (true)
+            {
+                // Генерируем множество простых чисел
+                int[] primes = GenerateFirst2NPrimes(numberOfCodes * 2);
+
+                // Выбираем два разных простых числа
+                int bIndex = rnd.Next(0, primes.Length);
+                int gIndex = rnd.Next(0, primes.Length);
+                while (gIndex == bIndex && primes.Length > 1)
+                {
+                    gIndex = rnd.Next(0, primes.Length);
+                }
+
+                int B = primes[bIndex];
+                int G = primes[gIndex];
+
+                // Проверяем условие: функция Эйлера от G должна быть больше 2N
+                // Для простого G: φ(G) = G - 1
+                long phiG = G - 1;
+                if (phiG > 2 * numberOfCodes)
+                {
+                    return (B, G);
+                }
+            }
+        }
+
+        // Метод для вычисления k = B^d mod G для d от 1 до 1000
+        public static List<long> CalculateKValues(int B, int G)
+        {
+            List<long> kValues = new List<long>();
+
+            for (int d = 1; d <= 1000; d++)
+            {
+                long k = PowMod(B, d, G);
+                kValues.Add(k);
+            }
+
+            return kValues;
+        }
+
         //Метод "грубой силы" для проверки простоты числа
         public static int FindPrimeByBruteForce(int min, int max)
         {
