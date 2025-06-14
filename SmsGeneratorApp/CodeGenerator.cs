@@ -8,12 +8,12 @@ namespace SmsGeneratorApp
         static Random rnd = new Random();
 
         // Метод для нахождения первых 2N простых чисел с помощью Решета Эратосфена
-        public static int[] GenerateFirst2NPrimes(int N)
+        public static int[] GenerateFirst2NPrimes(int NumberOfCodes)
         {
-            if (N <= 0) return new int[0];
+            if (NumberOfCodes <= 0) return new int[0];
 
             // Оценка верхней границы для 2N простых чисел 
-            int upperBound = N > 6 ? (int)(2 * N * Math.Log(2 * N) + 2 * N * Math.Log(Math.Log(2 * N))) : 20;
+            int upperBound = NumberOfCodes > 6 ? (int)(2 * NumberOfCodes * Math.Log(2 * NumberOfCodes) + 2 * NumberOfCodes * Math.Log(Math.Log(2 * NumberOfCodes))) : 20;
 
             bool[] isPrime = new bool[upperBound + 1];
             for (int i = 2; i <= upperBound; i++) isPrime[i] = true;
@@ -30,13 +30,13 @@ namespace SmsGeneratorApp
             }
 
             List<int> primes = new List<int>();
-            for (int i = 2; i <= upperBound && primes.Count < 2 * N; i++)
+            for (int i = 2; i <= upperBound && primes.Count < 2 * NumberOfCodes; i++)
             {
                 if (isPrime[i]) primes.Add(i);
             }
 
             // Если не набрали достаточно простых чисел, увеличиваем границу и повторяем
-            while (primes.Count < 2 * N)
+            while (primes.Count < 2 * NumberOfCodes)
             {
                 upperBound *= 2;
                 isPrime = new bool[upperBound + 1];
@@ -54,13 +54,13 @@ namespace SmsGeneratorApp
                 }
 
                 primes.Clear();
-                for (int i = 2; i <= upperBound && primes.Count < 2 * N; i++)
+                for (int i = 2; i <= upperBound && primes.Count < 2 * NumberOfCodes; i++)
                 {
                     if (isPrime[i]) primes.Add(i);
                 }
             }
 
-            return primes.GetRange(0, 2 * N).ToArray();
+            return primes.GetRange(0, 2 * NumberOfCodes).ToArray();
         }
 
         //Метод "грубой силы" для проверки простоты числа
