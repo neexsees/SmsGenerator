@@ -142,18 +142,23 @@ namespace SmsGeneratorApp
             return true;
         }
 
-        private void GenerateButton_Click(object sender, EventArgs e)
+        private async void GenerateButton_Click(object sender, EventArgs e)
         {
             if (TryGetLength(out long length) && TryGetCount(out long numberOfCodes))
             {
                 try
                 {
-                    long a, m;
-                    List<long> usedK;
-                    var codes = CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out usedK);
+                    // Асинхронно генерируем в фоновом потоке
+                    var result = await Task.Run(() =>
+                    {
+                        long a, m;
+                        List<long> usedK;
+                        var codes = CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out usedK);
+                        return new { Codes = codes, A = a, M = m, K = usedK };
+                    });
 
-                    var resultForm = new Result(codes);
-                    resultForm.Show();
+                    var resultForm = new Result(result.Codes);
+                    resultForm.ShowDialog();
                 }
                 catch (Exception ex)
                 {
