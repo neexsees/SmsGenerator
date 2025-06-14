@@ -107,7 +107,6 @@ namespace SmsGeneratorApp
             return a == 1;
         }
 
-
         //Добавление проверки простоты чисел 
         static bool IsPrime(long num)
         {
@@ -117,7 +116,7 @@ namespace SmsGeneratorApp
             return true;
         }
 
-        //функция Эйлера для вычисляет сколько взаимно простых чисел есть  с заданным числом
+        //функция Эйлера для вычисляет сколько взаимно простых чисел есть с заданным числом
         static long EulerFunction(long n)
         {
             if (IsPrime(n)) return n - 1;
