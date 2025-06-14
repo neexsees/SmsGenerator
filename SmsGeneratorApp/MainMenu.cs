@@ -18,6 +18,7 @@ namespace SmsGeneratorApp
 
         private void InitializeComponent()
         {
+
             lengthLabel = new Label();
             lengthInput = new RoundedTextBox();
             SuspendLayout();

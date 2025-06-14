@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SmsGeneratorApp
 {
     public static class CodeGenerator
@@ -11,16 +6,23 @@ namespace SmsGeneratorApp
         static Random rnd = new Random();
 
         //Расчет НОД
-        static long EuclidsAlgorithm(long a, long n)
+        public static bool MutualSimplicity(int a, int b)
         {
-            while (n != 0)
+            if (a < b)
             {
-                long r = a % n;
-                a = n;
-                n = r;
+                int temp = a;
+                a = b;
+                b = temp;
             }
 
-            return a;
+            while (b != 0)
+            {
+                int r = a % b;
+                a = b;
+                b = r;
+            }
+
+            return a == 1;
         }
 
         //Добавление проверки простоты чисел
