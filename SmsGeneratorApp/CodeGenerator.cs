@@ -1,6 +1,4 @@
 ﻿
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
-
 namespace SmsGeneratorApp
 {
     public static class CodeGenerator
@@ -53,9 +51,8 @@ namespace SmsGeneratorApp
             return a == 1;
         }
 
-        
 
-        //Добавление проверки простоты чисел ДЕЛИМ НА 2, НАДО ЧТОБЫ БЫЛО РЕШЕТО И ГРУБАЯ СИЛА
+        //Добавление проверки простоты чисел 
         static bool IsPrime(long num)
         {
             if (num <= 1) return false;
@@ -148,7 +145,7 @@ namespace SmsGeneratorApp
                 for (long attempt = 0; attempt < 100; attempt++)
                 {
                     long candidateA = rnd.Next(2, (int)(candidateN > int.MaxValue ? int.MaxValue : candidateN));
-                    if (EuclidsAlgorithm(candidateA, candidateN) == 1)
+                    if (MutualSimplicity(candidateA, candidateN) == 1)
                     {
                         try // Проверяем, можно ли получить достаточно кодов с этими параметрами
                         {
