@@ -6,12 +6,12 @@ namespace SmsGeneratorApp
         static Random rnd = new Random();
 
         // Метод для нахождения первых 2N простых чисел с помощью Решета Эратосфена
-        public static int[] GenerateFirst2NPrimes(int NumberOfCodes)
+        public static int[] GenerateFirst2NPrimes(int numberOfCodes)
         {
-            if (NumberOfCodes <= 0) return new int[0];
+            if (numberOfCodes <= 0) return new int[0];
 
             // Оценка верхней границы для 2N простых чисел 
-            int upperBound = NumberOfCodes > 6 ? (int)(2 * NumberOfCodes * Math.Log(2 * NumberOfCodes) + 2 * NumberOfCodes * Math.Log(Math.Log(2 * NumberOfCodes))) : 20;
+            int upperBound = numberOfCodes > 6 ? (int)(2 * numberOfCodes * Math.Log(2 * numberOfCodes) + 2 * numberOfCodes * Math.Log(Math.Log(2 * numberOfCodes))) : 20;
 
             bool[] isPrime = new bool[upperBound + 1];
             for (int i = 2; i <= upperBound; i++) isPrime[i] = true;
@@ -28,13 +28,13 @@ namespace SmsGeneratorApp
             }
 
             List<int> primes = new List<int>();
-            for (int i = 2; i <= upperBound && primes.Count < 2 * NumberOfCodes; i++)
+            for (int i = 2; i <= upperBound && primes.Count < 2 * numberOfCodes; i++)
             {
                 if (isPrime[i]) primes.Add(i);
             }
 
             // Если не набрали достаточно простых чисел, увеличиваем границу и повторяем
-            while (primes.Count < 2 * NumberOfCodes)
+            while (primes.Count < 2 * numberOfCodes)
             {
                 upperBound *= 2;
                 isPrime = new bool[upperBound + 1];
@@ -52,13 +52,13 @@ namespace SmsGeneratorApp
                 }
 
                 primes.Clear();
-                for (int i = 2; i <= upperBound && primes.Count < 2 * NumberOfCodes; i++)
+                for (int i = 2; i <= upperBound && primes.Count < 2 * numberOfCodes; i++)
                 {
                     if (isPrime[i]) primes.Add(i);
                 }
             }
 
-            return primes.GetRange(0, 2 * NumberOfCodes).ToArray();
+            return primes.GetRange(0, 2 * numberOfCodes).ToArray();
         }
 
         //Метод "грубой силы" для проверки простоты числа

@@ -126,9 +126,9 @@ namespace SmsGeneratorApp
             codeLength = value;
             return true;
         }
-        private bool TryGetCount(out long codeCount)
+        private bool TryGetCount(out long numberOfCodes)
         {
-            codeCount = 0;
+            numberOfCodes = 0;
             string input = countInput.Text.Trim();
 
             if (!long.TryParse(input, out long value) || value <= 0)
@@ -138,15 +138,15 @@ namespace SmsGeneratorApp
                 return false;
             }
 
-            codeCount = value;
+            numberOfCodes = value;
             return true;
         }
 
         private void GenerateButton_Click(object sender, EventArgs e)
         {
-            if (TryGetLength(out long length) && TryGetCount(out long count))
+            if (TryGetLength(out long length) && TryGetCount(out long numberOfCodes))
             {
-                if (!CodeGenerator.FindSuitableParameters(length, count, out long a, out long n))
+                if (!CodeGenerator.FindSuitableParameters(length, numberOfCodes, out long a, out long n))
                 {
                     MessageBox.Show("Не удалось найти параметры a и n.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -154,7 +154,7 @@ namespace SmsGeneratorApp
 
                 try
                 {
-                    var codes = CodeGenerator.MakeCodes(a, n, length, count);
+                    var codes = CodeGenerator.MakeCodes(a, n, length, numberOfCodes);
                     var resultForm = new Result(codes);
                     resultForm.Show(); 
                 }
