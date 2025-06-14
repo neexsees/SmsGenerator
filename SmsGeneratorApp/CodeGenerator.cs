@@ -5,6 +5,7 @@ namespace SmsGeneratorApp
     {
         static Random rnd = new Random();
 
+
         // Метод для нахождения первых 2N простых чисел с помощью Решета Эратосфена
         public static int[] GenerateFirst2NPrimes(int numberOfCodes)
         {
@@ -59,6 +60,16 @@ namespace SmsGeneratorApp
             }
 
             return primes.GetRange(0, 2 * numberOfCodes).ToArray();
+        }
+
+        public static int SelectRandomPrimeP(int NumberOfCodes)
+        {
+            // Генерируем первые 2N простых чисел с помощью Решета Эратосфена
+            int[] primes = GenerateFirst2NPrimes(NumberOfCodes);
+
+            // Выбираем случайное простое число p из этого множества
+            int randomIndex = rnd.Next(0, primes.Length);
+            return primes[randomIndex];
         }
 
         //Метод "грубой силы" для проверки простоты числа
