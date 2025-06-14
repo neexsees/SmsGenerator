@@ -118,34 +118,73 @@ namespace SmsGeneratorApp
             return a == 1;
         }
 
-        //Добавление проверки простоты чисел 
-        static bool IsPrime(long num)
+        //подбор M
+        public static long FindValidModulus(int lengthCode, int numberOfCodes, out long phi, out List<long> phiDivisors)
         {
-            if (num <= 1) return false;
-            for (long i = 2; i * i <= num; i++)
-                if (num % i == 0) return false;
-            return true;
-        }
+            if (lengthCode < 6 || lengthCode > 9)
+                throw new ArgumentException("Длина кода должна быть от 6 до 9");
 
-        //функция Эйлера для вычисляет сколько взаимно простых чисел есть с заданным числом
-        static long EulerFunction(long n)
-        {
-            if (IsPrime(n)) return n - 1;
+            long mMin = (long)Math.Pow(10, lengthCode - 1);
+            long mMax = (long)Math.Pow(10, lengthCode) - 1;
 
-            // Стандартный расчет для составных чисел
-            long result = n;
-            for (long p = 2; p * p <= n; ++p)
+            while (true)
             {
-                if (n % p == 0)
+                int p = SelectRandomPrimeP(100);
+
+                long minQ = mMin / p + 1;
+                long maxQ = mMax / p;
+
+                if (minQ >= maxQ) continue;
+
+                int attempts = 0;
+                while (attempts < 1000)
                 {
-                    while (n % p == 0)
-                        n /= p;
-                    result -= result / p;
+                    int q = FindPrimeByBruteForce((int)minQ, (int)maxQ);
+
+                    if (!MutualSimplicity(p, q))
+                    {
+                        attempts++;
+                        continue;
+                    }
+
+                    long m = (long)p * q;
+
+                    if (m < mMin || m > mMax)
+                    {
+                        attempts++;
+                        continue;
+                    }
+
+                    phi = (long)(p - 1) * (q - 1); // функция Эйлера
+
+                    if (phi <= 2 * numberOfCodes)
+                    {
+                        attempts++;
+                        continue;
+                    }
+
+                    phiDivisors = FindAllDivisors(phi);
+                    return m;
+
                 }
             }
-            if (n > 1)
-                result -= result / n;
-            return result;
+        }
+
+        //Делители функции Эйлера
+        public static List<long> FindAllDivisors(long n)
+        {
+            List<long> divisors = new List<long>();
+            for (long i = 1; i * i <= n; i++)
+            {
+                if (n % i == 0)
+                {
+                    divisors.Add(i);
+                    if (i != n / i) 
+                        divisors.Add(n / i);
+                }
+            }
+            divisors.Sort();
+            return divisors;
         }
 
         //Возведение в степень
