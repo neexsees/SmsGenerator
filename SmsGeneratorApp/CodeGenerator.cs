@@ -246,50 +246,97 @@ namespace SmsGeneratorApp
             return res;
         }
 
-        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes, out long m, out long a, out List<long> usedK)
+        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes,
+                                        out long m, out long a, out List<long> usedK)
         {
+            // 1. Генерация модуля m (10^(n-1) < m < 10^n)
+            m = GenerateModulus(lengthCode);
 
-            long phi;
-            List<long> phiDivisors;
-            m = FindValidModulus(lengthCode, numberOfCodes, out phi, out phiDivisors);
-            long mLocal = m;
-            int[] allPrimes = GenerateFirst2NPrimes(numberOfCodes * 100);
-            //диапазон для lengthCode-разрядных чисел
-            int minA = (int)Math.Pow(10, lengthCode - 1);
-            int maxA = (int)Math.Pow(10, lengthCode) - 1;
+            // 2. Выбор простого a нужной длины
+            a = GeneratePrime(lengthCode);
 
-            // Отбираем те, что нужной длины и взаимно просты с m
-            var validA = allPrimes.Where(p => p >= minA && p <= maxA && MutualSimplicity(p, (int)mLocal)).ToList();
+            // 3. Генерация списка k
+            usedK = GenerateKValues(numberOfCodes);
 
-            if (validA.Count == 0)
-                throw new Exception("Не найдено подходящего простого числа a.");
-
-            // Случайный выбор a
-            a = validA[rnd.Next(validA.Count)];
-
-            // Генерируем B и G, получаем k-массив
-            var (B, G) = GeneratePrimesBG(numberOfCodes);
-            usedK = CalculateKValues(B, G);
-
-            // Вычисляем коды: a^k mod m
-            var seen = new HashSet<long>();
+            // 4. Генерация кодов: a^k mod m
             var codes = new List<long>();
+            var seen = new HashSet<long>();
 
             foreach (var k in usedK)
             {
-                long code = PowMod(a, k, m);
-                if (seen.Add(code)) // Добавит только уникальные
+                long code = ModPow(a, k, m);
+                if (seen.Add(code)) // Уникальные коды
                 {
                     codes.Add(code);
-                    if (codes.Count == numberOfCodes)
+                    if (codes.Count >= numberOfCodes)
                         break;
                 }
             }
 
-            if (codes.Count < numberOfCodes)
-                throw new Exception("Недостаточно уникальных кодов. Попробуйте изменить параметры.");
-
             return codes;
         }
+
+        private static long GenerateModulus(int length)
+        {
+            long min = (long)Math.Pow(10, length - 1);
+            long max = (long)Math.Pow(10, length) - 1;
+            return rnd.Next((int)min, (int)max);
+        }
+
+        private static long GeneratePrime(int length)
+        {
+            long min = (long)Math.Pow(10, length - 1);
+            long max = (long)Math.Pow(10, length) - 1;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                long num = rnd.Next((int)min, (int)max);
+                if (IsPrime(num))
+                    return num;
+            }
+
+            throw new Exception("Не удалось найти простое число за 1000 попыток");
+        }
+
+        private static List<long> GenerateKValues(int count)
+        {
+            var values = new List<long>();
+            for (int i = 0; i < count * 2; i++)
+            {
+                values.Add(rnd.Next(1000, 100000));
+            }
+            return values.Distinct().Take(count).ToList();
+        }
+
+        private static bool IsPrime(long number)
+        {
+            if (number <= 1) return false;
+            if (number == 2) return true;
+            if (number % 2 == 0) return false;
+
+            var boundary = (long)Math.Sqrt(number);
+            for (long i = 3; i <= boundary; i += 2)
+                if (number % i == 0)
+                    return false;
+
+            return true;
+        }
+
+        private static long ModPow(long a, long k, long m)
+        {
+            long result = 1;
+            a %= m;
+
+            while (k > 0)
+            {
+                if ((k & 1) == 1)
+                    result = (result * a) % m;
+                a = (a * a) % m;
+                k >>= 1;
+            }
+
+            return result;
+        }
+
     }
 }

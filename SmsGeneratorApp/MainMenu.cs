@@ -116,9 +116,9 @@ namespace SmsGeneratorApp
             codeLength = 0;
             string input = lengthInput.Text.Trim();
 
-            if (!long.TryParse(input, out long value) || value <= 0 || value >= 10)
+            if (!long.TryParse(input, out long value) || value <= 0 || value < 6 || value > 9)
             {
-                MessageBox.Show("Введите корректную длину кода (целое положительное число меньше 10).",
+                MessageBox.Show("Введите корректную длину кода (целое число от 6 до 9).",
                     "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -126,6 +126,7 @@ namespace SmsGeneratorApp
             codeLength = value;
             return true;
         }
+
         private bool TryGetCount(out long numberOfCodes)
         {
             numberOfCodes = 0;
@@ -148,24 +149,31 @@ namespace SmsGeneratorApp
             {
                 try
                 {
-                    // Асинхронно генерируем в фоновом потоке
                     var result = await Task.Run(() =>
                     {
                         long a, m;
                         List<long> usedK;
-                        var codes = CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out usedK);
-                        return new { Codes = codes, A = a, M = m, K = usedK };
+                        return CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out usedK);
                     });
+                    Debug.WriteLine($"Сгенерировано кодов: {result.Count}");
 
-                    var resultForm = new Result(result.Codes);
-                    resultForm.ShowDialog();
+                    var resultForm = new Result(result);
+                    resultForm.Show(); // Просто показываем новую форму
+                    this.Hide(); // Скрываем текущую форму (но не закрываем)
+
+                    // Обработчик закрытия формы результата
+                    resultForm.FormClosed += (s, args) =>
+                    {
+                        this.Show(); // Показываем главную форму снова
+                    };
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка генерации: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Ошибка генерации: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
+
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
             string chmPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\UserGuide.chm";
