@@ -216,7 +216,7 @@ namespace SmsGeneratorApp
         }
 
         //Возведение в степень
-        static long PowMod(long a, long k, long n)
+        public static long PowMod(long a, long k, long n)
         {
             long res = 1;
             a %= n;
@@ -262,7 +262,7 @@ namespace SmsGeneratorApp
             }
         }
 
-        private static (List<long> codes, List<long> usedK) TryGenerateCodes(long a, long m, int lengthCode, int numberOfCodes, long minValue, long maxValue)
+        public static (List<long> codes, List<long> usedK) TryGenerateCodes(long a, long m, int lengthCode, int numberOfCodes, long minValue, long maxValue)
         {
             var codes = new List<long>(numberOfCodes);
             var usedK = new List<long>(numberOfCodes);
@@ -288,7 +288,7 @@ namespace SmsGeneratorApp
             return (null, null);
         }
 
-        private static long FindOptimizedModulus(int lengthCode, int numberOfCodes, HashSet<long> checkedM)
+        public static long FindOptimizedModulus(int lengthCode, int numberOfCodes, HashSet<long> checkedM)
         {
             int attempts = 0;
             while (attempts < 1000)
@@ -301,7 +301,7 @@ namespace SmsGeneratorApp
             return FindValidModulus(lengthCode, numberOfCodes, out _, out _);
         }
 
-        private static long GenerateOptimizedPrime(int lengthCode, long minValue, long maxValue, HashSet<long> checkedA)
+        public static long GenerateOptimizedPrime(int lengthCode, long minValue, long maxValue, HashSet<long> checkedA)
         {
             int attempts = 0;
             while (attempts < 100)
@@ -314,7 +314,7 @@ namespace SmsGeneratorApp
             return GeneratePrime(lengthCode);
         }
 
-        private static long GeneratePrime(int length)
+        public static long GeneratePrime(int length)
         {
             long min = (long)Math.Pow(10, length - 1);
             long max = (long)Math.Pow(10, length) - 1;
