@@ -122,7 +122,7 @@ namespace SmsGeneratorApp
                 }
 
                 if (isPrime)
-                    return 1;
+                    return q;
             }
         }
 
@@ -276,30 +276,13 @@ namespace SmsGeneratorApp
             long min = (long)Math.Pow(10, length - 1);
             long max = (long)Math.Pow(10, length) - 1;
 
-            for (int i = 0; i < 1000; i++)
-            {
-                long num = rnd.Next((int)min, (int)max);
-                if (IsPrime(num))
-                    return num;
-            }
+            // Проверяем, что диапазон влезает в int (иначе будет переполнение)
+            if (min < int.MinValue || max > int.MaxValue)
+                throw new ArgumentException("Диапазон слишком большой для int");
 
-            throw new Exception("Не удалось найти простое число за 1000 попыток");
+            // Вызываем FindPrimeByBruteForce
+            int prime = FindPrimeByBruteForce((int)min, (int)max);
+            return prime;
         }
-
-
-        private static bool IsPrime(long number)
-        {
-            if (number <= 1) return false;
-            if (number == 2) return true;
-            if (number % 2 == 0) return false;
-
-            var boundary = (long)Math.Sqrt(number);
-            for (long i = 3; i <= boundary; i += 2)
-                if (number % i == 0)
-                    return false;
-
-            return true;
-        }
-
     }
 }
