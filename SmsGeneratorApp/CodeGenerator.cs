@@ -9,57 +9,47 @@ namespace SmsGeneratorApp
         // Метод для нахождения первых 2N простых чисел с помощью Решета Эратосфена
         public static int[] GenerateFirst2NPrimes(int numberOfCodes)
         {
-            if (numberOfCodes <= 0) return new int[0];
+            if (numberOfCodes <= 0) return Array.Empty<int>();
 
-            // Оценка верхней границы для 2N простых чисел 
-            int upperBound = numberOfCodes > 6 ? (int)(2 * numberOfCodes * Math.Log(2 * numberOfCodes) + 2 * numberOfCodes * Math.Log(Math.Log(2 * numberOfCodes))) : 20;
+            int EstimateUpperBound(int n) => n < 6 ? 20 :
+                (int)(n * (Math.Log(n) + Math.Log(Math.Log(n)) - 0.5));
 
-            bool[] isPrime = new bool[upperBound + 1];
-            for (int i = 2; i <= upperBound; i++) isPrime[i] = true;
+            int upperBound = EstimateUpperBound(2 * numberOfCodes);
+            var primes = new List<int>(2 * numberOfCodes);
 
-            for (int p = 2; p * p <= upperBound; p++)
-            {
-                if (isPrime[p])
-                {
-                    for (int i = p * p; i <= upperBound; i += p)
-                    {
-                        isPrime[i] = false;
-                    }
-                }
-            }
-
-            List<int> primes = new List<int>();
-            for (int i = 2; i <= upperBound && primes.Count < 2 * numberOfCodes; i++)
-            {
-                if (isPrime[i]) primes.Add(i);
-            }
-
-            // Если не набрали достаточно простых чисел, увеличиваем границу и повторяем
             while (primes.Count < 2 * numberOfCodes)
             {
-                upperBound *= 2;
-                isPrime = new bool[upperBound + 1];
-                for (int i = 2; i <= upperBound; i++) isPrime[i] = true;
+                int sieveBound = (upperBound - 1) / 2;
+                var isPrime = new bool[sieveBound + 1];
+                Array.Fill(isPrime, true);
 
-                for (int p = 2; p * p <= upperBound; p++)
+                if (upperBound >= 2 && primes.Count < 2 * numberOfCodes)
+                    primes.Add(2);
+
+                for (int i = 1; i <= sieveBound; i++)
                 {
-                    if (isPrime[p])
+                    if (isPrime[i])
                     {
-                        for (int i = p * p; i <= upperBound; i += p)
+                        int currentPrime = 2 * i + 1;
+                        if (primes.Count < 2 * numberOfCodes)
+                            primes.Add(currentPrime);
+
+                        for (long j = (long)currentPrime * currentPrime; j <= upperBound; j += 2 * currentPrime)
                         {
-                            isPrime[i] = false;
+                            if (j % 2 == 1)
+                                isPrime[(j - 1) / 2] = false;
                         }
                     }
                 }
 
-                primes.Clear();
-                for (int i = 2; i <= upperBound && primes.Count < 2 * numberOfCodes; i++)
-                {
-                    if (isPrime[i]) primes.Add(i);
-                }
+                if (primes.Count >= 2 * numberOfCodes)
+                    break;
+
+                // Увеличиваем границу для следующей попытки
+                upperBound *= 2;
             }
 
-            return primes.GetRange(0, 2 * numberOfCodes).ToArray();
+            return primes.Take(2 * numberOfCodes).ToArray();
         }
 
         public static int SelectRandomPrimeP(int NumberOfCodes)
@@ -73,15 +63,12 @@ namespace SmsGeneratorApp
         }
 
         // Метод для генерации простых чисел B и G
-        public static (int B, int G) GeneratePrimesBG(int numberOfCodes)
+        public static (int b, int g) GeneratePrimesBG(int numberOfCodes)
         {
-            // Генерируем простые числа, пока не найдем подходящие
             while (true)
             {
-                // Генерируем множество простых чисел
                 int[] primes = GenerateFirst2NPrimes(numberOfCodes * 2);
 
-                // Выбираем два разных простых числа
                 int bIndex = rnd.Next(0, primes.Length);
                 int gIndex = rnd.Next(0, primes.Length);
                 while (gIndex == bIndex && primes.Length > 1)
@@ -89,31 +76,28 @@ namespace SmsGeneratorApp
                     gIndex = rnd.Next(0, primes.Length);
                 }
 
-                int B = primes[bIndex];
-                int G = primes[gIndex];
+                int b = primes[bIndex];
+                int g = primes[gIndex];
 
-                // Проверяем условие: функция Эйлера от G должна быть больше 2N
-                // Для простого G: φ(G) = G - 1
-                long phiG = G - 1;
+                long phiG = g - 1;
                 if (phiG > 2 * numberOfCodes)
                 {
-                    return (B, G);
+                    return (b, g);
                 }
             }
         }
 
-        // Метод для вычисления k = B^d mod G для d от 1 до 1000
-        public static List<long> CalculateKValues(int B, int G)
+        public static List<long> CalculateKValues(int b, int g, int count)
         {
-            List<long> kValues = new List<long>();
+            HashSet<long> uniqueKValues = new HashSet<long>();
 
-            for (int d = 1; d <= 1000; d++)
+            for (int d = 1; uniqueKValues.Count < count && d <= count * 2; d++)
             {
-                long k = PowMod(B, d, G);
-                kValues.Add(k);
+                long k = PowMod(b, d, g);
+                uniqueKValues.Add(k);
             }
 
-            return kValues;
+            return uniqueKValues.Take(count).ToList();
         }
 
         //Метод "грубой силы" для проверки простоты числа
@@ -246,8 +230,9 @@ namespace SmsGeneratorApp
             return res;
         }
 
+
         public static List<long> GenerateCodes(int lengthCode, int numberOfCodes,
-                                        out long m, out long a, out List<long> usedK)
+                                              out long m, out long a, out List<long> usedK)
         {
             // 1. Генерация модуля m (10^(n-1) < m < 10^n)
             m = GenerateModulus(lengthCode);
@@ -255,16 +240,19 @@ namespace SmsGeneratorApp
             // 2. Выбор простого a нужной длины
             a = GeneratePrime(lengthCode);
 
-            // 3. Генерация списка k
-            usedK = GenerateKValues(numberOfCodes);
+            // 3. Генерация простых чисел b и g
+            (int b, int g) = GeneratePrimesBG(numberOfCodes);
 
-            // 4. Генерация кодов: a^k mod m
+            // 4. Генерация списка k
+            usedK = CalculateKValues(b, g, numberOfCodes);
+
+            // 5. Генерация кодов: a^k mod m
             var codes = new List<long>();
             var seen = new HashSet<long>();
 
             foreach (var k in usedK)
             {
-                long code = ModPow(a, k, m);
+                long code = PowMod(a, k, m);
                 if (seen.Add(code)) // Уникальные коды
                 {
                     codes.Add(code);
@@ -298,15 +286,6 @@ namespace SmsGeneratorApp
             throw new Exception("Не удалось найти простое число за 1000 попыток");
         }
 
-        private static List<long> GenerateKValues(int count)
-        {
-            var values = new List<long>();
-            for (int i = 0; i < count * 2; i++)
-            {
-                values.Add(rnd.Next(1000, 100000));
-            }
-            return values.Distinct().Take(count).ToList();
-        }
 
         private static bool IsPrime(long number)
         {
@@ -320,22 +299,6 @@ namespace SmsGeneratorApp
                     return false;
 
             return true;
-        }
-
-        private static long ModPow(long a, long k, long m)
-        {
-            long result = 1;
-            a %= m;
-
-            while (k > 0)
-            {
-                if ((k & 1) == 1)
-                    result = (result * a) % m;
-                a = (a * a) % m;
-                k >>= 1;
-            }
-
-            return result;
         }
 
     }

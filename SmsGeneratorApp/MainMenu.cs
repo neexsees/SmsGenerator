@@ -149,22 +149,21 @@ namespace SmsGeneratorApp
             {
                 try
                 {
+                    long m, a;
+                    List<long> usedK;
                     var result = await Task.Run(() =>
                     {
-                        long a, m;
-                        List<long> usedK;
                         return CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out usedK);
                     });
                     Debug.WriteLine($"Сгенерировано кодов: {result.Count}");
 
                     var resultForm = new Result(result);
-                    resultForm.Show(); // Просто показываем новую форму
-                    this.Hide(); // Скрываем текущую форму (но не закрываем)
+                    resultForm.Show();
+                    this.Hide();
 
-                    // Обработчик закрытия формы результата
                     resultForm.FormClosed += (s, args) =>
                     {
-                        this.Show(); // Показываем главную форму снова
+                        this.Show();
                     };
                 }
                 catch (Exception ex)
