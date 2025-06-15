@@ -37,18 +37,20 @@ namespace SmsGeneratorApp
             var rect = new Rectangle(0, 0, Width - 1, Height - 1);
             var path = GetRoundPath(rect, CornerRadius);
 
+            //Отрисовка тени
             var shadowRect = new Rectangle(3, 3, Width - 1, Height - 1);
             var shadowPath = GetRoundPath(shadowRect, CornerRadius);
+
+            //Отрисовка фона
             using (var shadowBrush = new SolidBrush(Color.FromArgb(40, Color.Black)))
                 g.FillPath(shadowBrush, shadowPath);
 
-
             using (var brush = new SolidBrush(isHovered ? HoverBackColor : BackColor))
                 g.FillPath(brush, path);
-
+            // Рамка
             using (var pen = new Pen(BorderColor, BorderThickness))
                 g.DrawPath(pen, path);
-
+            //Текст
             TextRenderer.DrawText(g, Text, Font, rect, ForeColor,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
