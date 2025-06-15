@@ -132,9 +132,9 @@ namespace SmsGeneratorApp
             numberOfCodes = 0;
             string input = countInput.Text.Trim();
 
-            if (!long.TryParse(input, out long value) || value <= 0)
+            if (!long.TryParse(input, out long value) || value < 1 || value > 100)
             {
-                MessageBox.Show("¬ведите корректное количество кодов (целое положительное число).",
+                MessageBox.Show("¬ведите количество кодов от 1 до 100.",
                     "ќшибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -142,7 +142,6 @@ namespace SmsGeneratorApp
             numberOfCodes = value;
             return true;
         }
-
         private async void GenerateButton_Click(object sender, EventArgs e)
         {
             if (TryGetLength(out long length) && TryGetCount(out long numberOfCodes))
