@@ -63,7 +63,7 @@ namespace SmsGeneratorApp
         }
 
         // Метод для генерации простых чисел B и G
-        public static (int b, int g) GeneratePrimesBG(int numberOfCodes)
+        public static (int b, int g)    GeneratePrimesBG(int numberOfCodes)
         {
             while (true)
             {
@@ -231,44 +231,87 @@ namespace SmsGeneratorApp
         }
 
 
-        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes,
-                                              out long m, out long a, out List<long> usedK)
+        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes, out long m, out long a, out List<long> usedK)
         {
-            // 1. Генерация модуля m (10^(n-1) < m < 10^n)
-            m = GenerateModulus(lengthCode);
 
-            // 2. Выбор простого a нужной длины
-            a = GeneratePrime(lengthCode);
+            long minValue = (long)Math.Pow(10, lengthCode - 1);
+            long maxValue = (long)Math.Pow(10, lengthCode) - 1;
 
-            // 3. Генерация простых чисел b и g
-            (int b, int g) = GeneratePrimesBG(numberOfCodes);
+            var checkedA = new HashSet<long>();
+            var checkedM = new HashSet<long>();
 
-            // 4. Генерация списка k
-            usedK = CalculateKValues(b, g, numberOfCodes);
+            while (true)
+            {
 
-            // 5. Генерация кодов: a^k mod m
-            var codes = new List<long>();
+                m = FindOptimizedModulus(lengthCode, numberOfCodes, checkedM);
+                checkedM.Add(m);
+
+
+                a = GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
+                checkedA.Add(a);
+
+                if (!MutualSimplicity((int)a, (int)m)) continue;
+
+
+                var (codes, generatedK) = TryGenerateCodes(a, m, lengthCode, numberOfCodes, minValue, maxValue);
+                if (codes != null && codes.Count >= numberOfCodes)
+                {
+                    usedK = generatedK;
+                    return codes;
+                }
+            }
+        }
+
+        private static (List<long> codes, List<long> usedK) TryGenerateCodes(long a, long m, int lengthCode, int numberOfCodes, long minValue, long maxValue)
+        {
+            var codes = new List<long>(numberOfCodes);
+            var usedK = new List<long>(numberOfCodes);
             var seen = new HashSet<long>();
 
-            foreach (var k in usedK)
+            (int b, int g) = GeneratePrimesBG(numberOfCodes);
+            var kValues = CalculateKValues(b, g, numberOfCodes);
+
+            foreach (var k in kValues)
             {
                 long code = PowMod(a, k, m);
-                if (seen.Add(code)) // Уникальные коды
+
+                if (code >= minValue && code <= maxValue && seen.Add(code))
                 {
                     codes.Add(code);
+                    usedK.Add(k);
+
                     if (codes.Count >= numberOfCodes)
-                        break;
+                        return (codes, usedK);
                 }
             }
 
-            return codes;
+            return (null, null);
         }
 
-        private static long GenerateModulus(int length)
+        private static long FindOptimizedModulus(int lengthCode, int numberOfCodes, HashSet<long> checkedM)
         {
-            long min = (long)Math.Pow(10, length - 1);
-            long max = (long)Math.Pow(10, length) - 1;
-            return rnd.Next((int)min, (int)max);
+            int attempts = 0;
+            while (attempts < 1000)
+            {
+                long m = FindValidModulus(lengthCode, numberOfCodes, out long phi, out _);
+                if (!checkedM.Contains(m) && phi % lengthCode == 0)
+                    return m;
+                attempts++;
+            }
+            return FindValidModulus(lengthCode, numberOfCodes, out _, out _);
+        }
+
+        private static long GenerateOptimizedPrime(int lengthCode, long minValue, long maxValue, HashSet<long> checkedA)
+        {
+            int attempts = 0;
+            while (attempts < 100)
+            {
+                long a = GeneratePrime(lengthCode);
+                if (!checkedA.Contains(a))
+                    return a;
+                attempts++;
+            }
+            return GeneratePrime(lengthCode);
         }
 
         private static long GeneratePrime(int length)
@@ -276,11 +319,9 @@ namespace SmsGeneratorApp
             long min = (long)Math.Pow(10, length - 1);
             long max = (long)Math.Pow(10, length) - 1;
 
-            // Проверяем, что диапазон влезает в int (иначе будет переполнение)
             if (min < int.MinValue || max > int.MaxValue)
                 throw new ArgumentException("Диапазон слишком большой для int");
 
-            // Вызываем FindPrimeByBruteForce
             int prime = FindPrimeByBruteForce((int)min, (int)max);
             return prime;
         }
