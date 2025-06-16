@@ -325,5 +325,7 @@ namespace SmsGeneratorApp
             int prime = FindPrimeByBruteForce((int)min, (int)max);
             return prime;
         }
+
     }
+
 }
