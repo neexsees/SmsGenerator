@@ -45,7 +45,7 @@ namespace SmsGeneratorApp
                 if (primes.Count >= 2 * numberOfCodes)
                     break;
 
-                // Увеличиваем границу для следующей попытки
+                
                 upperBound *= 2;
             }
 
@@ -86,7 +86,7 @@ namespace SmsGeneratorApp
                 }
             }
         }
-
+        //нахождение стпени k
         public static List<long> CalculateKValues(int b, int g, int count)
         {
             HashSet<long> uniqueKValues = new HashSet<long>();
@@ -183,7 +183,7 @@ namespace SmsGeneratorApp
                         continue;
                     }
 
-                    phi = (long)(p - 1) * (q - 1); // функция Эйлера
+                    phi = (long)(p - 1) * (q - 1); 
 
                     if (phi <= 2 * numberOfCodes)
                     {
