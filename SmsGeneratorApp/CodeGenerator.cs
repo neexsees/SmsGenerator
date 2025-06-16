@@ -301,17 +301,21 @@ namespace SmsGeneratorApp
             return FindValidModulus(lengthCode, numberOfCodes, out _, out _);
         }
 
-        public static long GenerateOptimizedPrime(int lengthCode, long minValue, long maxValue, HashSet<long> checkedA)
+        public static long GenerateOptimizedPrime(
+            int lengthCode, long minValue, long maxValue, HashSet<long> checkedA,
+            Func<int, long> generatePrimeOverride = null)
         {
+            var generator = generatePrimeOverride ?? GeneratePrime;
+
             int attempts = 0;
             while (attempts < 100)
             {
-                long a = GeneratePrime(lengthCode);
+                long a = generator(lengthCode);
                 if (!checkedA.Contains(a))
                     return a;
                 attempts++;
             }
-            return GeneratePrime(lengthCode);
+            return generator(lengthCode); 
         }
 
         public static long GeneratePrime(int length)
@@ -325,6 +329,8 @@ namespace SmsGeneratorApp
             int prime = FindPrimeByBruteForce((int)min, (int)max);
             return prime;
         }
+
+
 
     }
 
