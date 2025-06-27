@@ -93,6 +93,21 @@ namespace SmsGeneratorApp
             };
             generateButton.Click += GenerateButton_Click;
             Controls.Add(generateButton);
+
+            var generateCustomButton = new RoundedButton
+            {
+                Text = "Свои параметры",
+                Location = new Point(440, 650),
+                Size = new Size(300, 60),
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                BackColor = Color.White,
+                ForeColor = Color.Black,
+                BorderColor = Color.FromArgb(0, 51, 102),
+                BorderThickness = 3,
+                CornerRadius = 25
+            };
+            generateCustomButton.Click += GenerateCustomButton_Click;
+            Controls.Add(generateCustomButton);
             // 
             // MainMenu
             // 
@@ -211,6 +226,17 @@ namespace SmsGeneratorApp
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+        private void GenerateCustomButton_Click(object sender, EventArgs e)
+        {
+            var customParamsForm = new CustomParamsForm();
+            customParamsForm.Show();
+            this.Hide();
+
+            customParamsForm.FormClosed += (s, args) =>
+            {
+                this.Show();
+            };
         }
     }
 }
