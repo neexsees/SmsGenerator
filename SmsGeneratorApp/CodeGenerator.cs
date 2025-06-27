@@ -45,7 +45,7 @@ namespace SmsGeneratorApp
                 if (primes.Count >= 2 * numberOfCodes)
                     break;
 
-                
+
                 upperBound *= 2;
             }
 
@@ -63,7 +63,7 @@ namespace SmsGeneratorApp
         }
 
         // Метод для генерации простых чисел B и G
-        public static (int b, int g)    GeneratePrimesBG(int numberOfCodes)
+        public static (int b, int g) GeneratePrimesBG(int numberOfCodes)
         {
             while (true)
             {
@@ -184,7 +184,7 @@ namespace SmsGeneratorApp
                         continue;
                     }
 
-                    phi = (long)(p - 1) * (q - 1); 
+                    phi = (long)(p - 1) * (q - 1);
 
                     if (phi <= 2 * numberOfCodes)
                     {
@@ -209,7 +209,7 @@ namespace SmsGeneratorApp
                 if (n % i == 0)
                 {
                     divisors.Add(i);
-                    if (i != n / i) 
+                    if (i != n / i)
                         divisors.Add(n / i);
                 }
             }
@@ -233,7 +233,7 @@ namespace SmsGeneratorApp
         }
 
 
-        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes, out long m, out long a, out long p, out long q, out List<long> usedK)
+        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes, out long m, out long a, out long p, out long q, out List<long> usedK, out int b, out int g)
         {
 
             long minValue = (long)Math.Pow(10, lengthCode - 1);
@@ -255,18 +255,19 @@ namespace SmsGeneratorApp
                 if (!MutualSimplicity((int)a, (int)m)) continue;
 
 
-                var (codes, generatedK) = TryGenerateCodes(a, m, lengthCode, numberOfCodes, minValue, maxValue);
+                var (codes, generatedK, generatedB, generatedG) = TryGenerateCodes(a, m, lengthCode, numberOfCodes, minValue, maxValue);
                 if (codes != null && codes.Count >= numberOfCodes)
                 {
                     usedK = generatedK;
+                    b = generatedB;
+                    g = generatedG;
                     return codes;
-                    
                 }
-                
+
             }
         }
 
-        public static (List<long> codes, List<long> usedK) TryGenerateCodes(long a, long m, int lengthCode, int numberOfCodes, long minValue, long maxValue)
+        public static (List<long> codes, List<long> usedK, int b, int g) TryGenerateCodes(long a, long m, int lengthCode, int numberOfCodes, long minValue, long maxValue)
         {
             var codes = new List<long>(numberOfCodes);
             var usedK = new List<long>(numberOfCodes);
@@ -285,11 +286,10 @@ namespace SmsGeneratorApp
                     usedK.Add(k);
 
                     if (codes.Count >= numberOfCodes)
-                        return (codes, usedK);
+                        return (codes, usedK, b, g);
                 }
             }
-
-            return (null, null);
+            return (null, null, 0, 0);
         }
 
         public static long FindOptimizedModulus(int lengthCode, int numberOfCodes, HashSet<long> checkedM)
@@ -321,7 +321,7 @@ namespace SmsGeneratorApp
                     return a;
                 attempts++;
             }
-            return generator(lengthCode); 
+            return generator(lengthCode);
         }
 
         public static long GeneratePrime(int length)
@@ -335,9 +335,5 @@ namespace SmsGeneratorApp
             int prime = FindPrimeByBruteForce((int)min, (int)max);
             return prime;
         }
-
-
-
     }
-
 }

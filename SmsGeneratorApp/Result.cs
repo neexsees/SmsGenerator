@@ -12,11 +12,14 @@ namespace SmsGeneratorApp
         private long m;
         private long p;
         private long q;
+        private int b;
+        private int g;
         private List<long> usedK;
         private List<long> codes;
+        private Button buttonHelp;
 
 
-        public Result(List<long> codes, long a, long m, long p, long q, List<long> usedK)
+        public Result(List<long> codes, long a, long m, long p, long q, List<long> usedK, int b, int g)
         {
             this.codes = codes;
             this.a = a;
@@ -24,36 +27,23 @@ namespace SmsGeneratorApp
             this.p = p;
             this.q = q;
             this.usedK = usedK;
+            this.b = b;
+            this.g = g;
 
-            Text = "Итог";
+            Text = "Сгенерированные коды";
             Size = new Size(1200, 800);
             BackColor = Color.White;
 
             InitializeComponents();
         }
+
         private void InitializeComponents()
         {
-            var paramsButton = new RoundedButton
-            {
-                Text = "Посмотреть используемые значения",
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Size = new Size(500, 60),
-                Location = new Point(350, 660),
-                BorderColor = Color.FromArgb(0, 51, 102),
-                BorderThickness = 3,
-                CornerRadius = 20
-            };
-            paramsButton.Click += (s, e) =>
-            {
-                var paramForm = new ParametersForm(a, m, p, q, usedK);
-                paramForm.ShowDialog();
-            };
-            Controls.Add(paramsButton);
             // Заголовок
             var title = new RoundLabel
             {
-                Text = "Генератор псевдослучайных SMS-кодов",
-                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                Text = "Генератор одноразовых псевдослучайных SMS-кодов",
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 Size = new Size(900, 60),
                 Location = new Point(150, 30),
                 BorderWidth = 4,
@@ -86,7 +76,7 @@ namespace SmsGeneratorApp
                 Multiline = true,                     
                 WordWrap = false,                        
                 ScrollBars = ScrollBars.Horizontal,      
-                BackColor = this.BackColor,
+                BackColor = Color.White,
                 TabStop = false
             };
             Controls.Add(codesBox);
@@ -113,11 +103,12 @@ namespace SmsGeneratorApp
                 Text = "Выгрузить в файл .txt",
                 Font = new Font("Segoe UI", 14, FontStyle.Bold),
                 Size = new Size(500, 80),
-                Location = new Point(350, 560),
+                Location = new Point(350, 490),
                 BorderColor = Color.FromArgb(0, 51, 102),
                 BorderThickness = 4,
                 CornerRadius = 30
             };
+
             exportButton.Click += (s, e) =>
             {
                 using var sfd = new SaveFileDialog
@@ -142,6 +133,33 @@ namespace SmsGeneratorApp
                 }
             };
             Controls.Add(exportButton);
+
+            var paramsButton = new RoundedButton
+            {
+                Text = "Отладка",
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                Size = new Size(500, 80),
+                Location = new Point(350, 600),
+                BorderColor = Color.FromArgb(0, 51, 102),
+                BorderThickness = 4,
+                CornerRadius = 30
+            };
+
+            paramsButton.Click += (s, e) =>
+            {
+                var paramForm = new ParametersForm(a, m, p, q, usedK, b, g);
+                paramForm.ShowDialog();
+            };
+            Controls.Add(paramsButton);
+
+            buttonHelp = new Button();
+            buttonHelp.Text = "Помощь";
+            buttonHelp.Size = new Size(200, 50);
+            buttonHelp.Location = new Point(50, 640);
+            buttonHelp.Click += ButtonHelp_Click;
+            buttonHelp.BackColor = Color.White;
+            Controls.Add(buttonHelp);
+
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -165,6 +183,23 @@ namespace SmsGeneratorApp
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
+        private void ButtonHelp_Click(object sender, EventArgs e)
+        {
+            string chmPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\UserGuide.chm";
+            if (File.Exists(chmPath))
+            {
+                System.Diagnostics.Process.Start(new ProcessStartInfo()
+                {
+                    FileName = chmPath,
+                    UseShellExecute = true
+                });
+            }
+            else
+            {
+                MessageBox.Show("Файл не найден.");
+            }
+        }
+
     }
 
 }

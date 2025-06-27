@@ -18,7 +18,7 @@ namespace SmsGeneratorApp
 
         private void InitializeComponent()
         {
-
+            this.BackColor = Color.White;
             lengthLabel = new Label();
             lengthInput = new RoundedTextBox();
             SuspendLayout();
@@ -29,11 +29,11 @@ namespace SmsGeneratorApp
                 BorderWidth = 8,
                 CornerRadius = 20,
                 FillColor = Color.FromArgb(240, 240, 240),
-                Font = new Font("Segoe UI", 16F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 Location = new Point(180, 30),
                 Size = new Size(900, 60),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Text = "Генератор псевдослучайных SMS-кодов"
+                Text = "Генератор одноразовых псевдослучайных SMS-кодов"
             };
             Controls.Add(titleLabel);
             //Текст перед вводом длины
@@ -75,6 +75,7 @@ namespace SmsGeneratorApp
             countInput.Size = new Size(500, 81);
             countInput.TabIndex = 3;
 
+
             Controls.Add(countLabel);
             Controls.Add(countInput);
             //Кнопка генерации
@@ -99,7 +100,7 @@ namespace SmsGeneratorApp
             Controls.Add(lengthInput);
             Controls.Add(lengthLabel);
             Name = "MainMenu";
-            Text = "Генератор SMS-кодов";
+            Text = "Генератор одноразовых псевдослучайных SMS-кодов";
             ResumeLayout(false);
             PerformLayout();
 
@@ -150,15 +151,14 @@ namespace SmsGeneratorApp
                 {
                     long m = 0, a = 0, p = 0, q = 0;
                     List<long> usedK = new List<long>();
-
+                    int b = 0, g = 0;
                     var result = await Task.Run(() =>
                     {
-                        return CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out p, out q, out usedK);
+                        return CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out p, out q, out usedK, out b, out g);
                     });
-
-
                     Debug.WriteLine($"Сгенерировано кодов: {result.Count}");
-                    var resultForm = new Result(result, a, m, p, q, usedK); 
+
+                    var resultForm = new Result(result, a, m, p, q, usedK, b, g);
                     resultForm.Show();
                     this.Hide();
 
