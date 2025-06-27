@@ -148,17 +148,17 @@ namespace SmsGeneratorApp
             {
                 try
                 {
-                    long m = 0;
-                    long a = 0;
-                    List<long> usedK = new List<long>(); // ← теперь компилятор точно знает, что переменная инициализирована
+                    long m = 0, a = 0, p = 0, q = 0;
+                    List<long> usedK = new List<long>();
 
                     var result = await Task.Run(() =>
                     {
-                        return CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out usedK);
+                        return CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out p, out q, out usedK);
                     });
-                    Debug.WriteLine($"Сгенерировано кодов: {result.Count}");
 
-                    var resultForm = new Result(result, a, m, usedK);
+
+                    Debug.WriteLine($"Сгенерировано кодов: {result.Count}");
+                    var resultForm = new Result(result, a, m, p, q, usedK); 
                     resultForm.Show();
                     this.Hide();
 

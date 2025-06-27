@@ -7,24 +7,24 @@ namespace SmsGeneratorApp
 {
     public partial class ParametersForm : Form
     {
-        public ParametersForm(long a, long m, List<long> kList)
+        public ParametersForm(long a, long m, long p, long q, List<long> kList)
         {
             Text = "Параметры генерации";
-            Size = new Size(800, 650);
+            Size = new Size(1200, 800);
             BackColor = Color.White;
             StartPosition = FormStartPosition.CenterParent;
 
-            InitializeComponents(a, m, kList);
+            InitializeComponents(a, m, p, q, kList);
         }
 
-        private void InitializeComponents(long a, long m, List<long> kList)
+        private void InitializeComponents(long a, long m, long p, long q, List<long> kList)
         {
             var title = new RoundLabel
             {
                 Text = "Использованные параметры генерации",
                 Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                Size = new Size(700, 50),
-                Location = new Point(50, 20),
+                Size = new Size(900, 60),
+                Location = new Point(180, 30),
                 BorderWidth = 4,
                 BorderColor = Color.FromArgb(0, 51, 102),
                 CornerRadius = 15,
@@ -51,11 +51,20 @@ namespace SmsGeneratorApp
             };
             Controls.Add(mLabel);
 
+            var mFullLabel = new Label
+            {
+                Text = $"m = p × q = {p} × {q} = {m}",
+                Font = new Font("Segoe UI", 14, FontStyle.Italic),
+                Location = new Point(60, 180),
+                AutoSize = true
+            };
+            Controls.Add(mFullLabel);
+
             var kHeader = new Label
             {
                 Text = "Использованные значения k:",
                 Font = new Font("Segoe UI", 13, FontStyle.Bold),
-                Location = new Point(60, 190),
+                Location = new Point(340, 260),
                 AutoSize = true
             };
             Controls.Add(kHeader);
@@ -65,28 +74,13 @@ namespace SmsGeneratorApp
                 Multiline = true,
                 ScrollBars = ScrollBars.Vertical,
                 ReadOnly = true,
-                Location = new Point(60, 230),
-                Size = new Size(660, 280),
+                Location = new Point(220, 310),
+                Size = new Size(800, 350),
                 Font = new Font("Segoe UI", 12),
                 Text = string.Join(", ", kList),
                 BackColor = Color.White
             };
             Controls.Add(kBox);
-
-            var closeButton = new RoundedButton
-            {
-                Text = "Закрыть",
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Size = new Size(200, 50),
-                Location = new Point(300, 540),
-                BorderColor = Color.FromArgb(0, 51, 102),
-                BorderThickness = 3,
-                CornerRadius = 20,
-                BackColor = Color.White,
-                ForeColor = Color.Black
-            };
-            closeButton.Click += (s, e) => this.Close();
-            Controls.Add(closeButton);
         }
     }
 }

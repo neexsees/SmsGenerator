@@ -1,6 +1,7 @@
 ﻿
 
 using System.Diagnostics;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace SmsGeneratorApp
 {
@@ -9,17 +10,20 @@ namespace SmsGeneratorApp
         private Label successLabel;
         private long a;
         private long m;
-        private List<long> kList;
-
+        private long p;
+        private long q;
+        private List<long> usedK;
         private List<long> codes;
 
 
-        public Result(List<long> codes, long a, long m, List<long> kList)
+        public Result(List<long> codes, long a, long m, long p, long q, List<long> usedK)
         {
             this.codes = codes;
             this.a = a;
             this.m = m;
-            this.kList = kList;
+            this.p = p;
+            this.q = q;
+            this.usedK = usedK;
 
             Text = "Итог";
             Size = new Size(1200, 800);
@@ -41,7 +45,7 @@ namespace SmsGeneratorApp
             };
             paramsButton.Click += (s, e) =>
             {
-                var paramForm = new ParametersForm(a, m, kList);
+                var paramForm = new ParametersForm(a, m, p, q, usedK);
                 paramForm.ShowDialog();
             };
             Controls.Add(paramsButton);
@@ -127,7 +131,6 @@ namespace SmsGeneratorApp
                 {
                     try
                     {
-                        // Сохраняем коды по одному в строке
                         File.WriteAllLines(sfd.FileName, codes.ConvertAll(c => c.ToString()));
 
                         MessageBox.Show("Файл успешно сохранён!", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);

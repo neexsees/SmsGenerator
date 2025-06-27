@@ -147,7 +147,7 @@ namespace SmsGeneratorApp
         }
 
         //подбор M
-        public static long FindValidModulus(int lengthCode, int numberOfCodes, out long phi, out List<long> phiDivisors)
+        public static long FindValidModulus(int lengthCode, int numberOfCodes, out long phi, out List<long> phiDivisors, out long p, out long q)
         {
             if (lengthCode < 6 || lengthCode > 9)
                 throw new ArgumentException("Длина кода должна быть от 6 до 9");
@@ -157,7 +157,7 @@ namespace SmsGeneratorApp
 
             while (true)
             {
-                int p = SelectRandomPrimeP(100);
+                p = SelectRandomPrimeP(100);
 
                 long minQ = mMin / p + 1;
                 long maxQ = mMax / p;
@@ -167,9 +167,10 @@ namespace SmsGeneratorApp
                 int attempts = 0;
                 while (attempts < 1000)
                 {
-                    int q = FindPrimeByBruteForce((int)minQ, (int)maxQ);
 
-                    if (!MutualSimplicity(p, q))
+                    q = FindPrimeByBruteForce((int)minQ, (int)maxQ);
+
+                    if (!MutualSimplicity((int)p, (int)q))
                     {
                         attempts++;
                         continue;
@@ -192,6 +193,7 @@ namespace SmsGeneratorApp
                     }
 
                     phiDivisors = FindAllDivisors(phi);
+
                     return m;
 
                 }
@@ -231,7 +233,7 @@ namespace SmsGeneratorApp
         }
 
 
-        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes, out long m, out long a, out List<long> usedK)
+        public static List<long> GenerateCodes(int lengthCode, int numberOfCodes, out long m, out long a, out long p, out long q, out List<long> usedK)
         {
 
             long minValue = (long)Math.Pow(10, lengthCode - 1);
@@ -243,7 +245,7 @@ namespace SmsGeneratorApp
             while (true)
             {
 
-                m = FindOptimizedModulus(lengthCode, numberOfCodes, checkedM);
+                m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out _, out _, out p, out q);
                 checkedM.Add(m);
 
 
@@ -293,14 +295,16 @@ namespace SmsGeneratorApp
         public static long FindOptimizedModulus(int lengthCode, int numberOfCodes, HashSet<long> checkedM)
         {
             int attempts = 0;
+            long p, q;
             while (attempts < 1000)
             {
-                long m = FindValidModulus(lengthCode, numberOfCodes, out long phi, out _);
+                long m = FindValidModulus(lengthCode, numberOfCodes, out long phi, out _, out p, out q);
                 if (!checkedM.Contains(m) && phi % lengthCode == 0)
                     return m;
                 attempts++;
             }
-            return FindValidModulus(lengthCode, numberOfCodes, out _, out _);
+
+            return FindValidModulus(lengthCode, numberOfCodes, out _, out _, out p, out q);
         }
 
         public static long GenerateOptimizedPrime(
