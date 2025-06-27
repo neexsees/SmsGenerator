@@ -141,7 +141,7 @@ namespace TestProject1
         [TestMethod]
         public void FindValidModulus_EdgeCases_HandlesCorrectly()
         {
-            // Test with minimal valid length
+            
             long m = CodeGenerator.FindValidModulus(6, 1, out long phi, out _);
             Assert.IsTrue(m >= 100000 && m <= 999999);
         }
@@ -159,15 +159,15 @@ namespace TestProject1
         [TestMethod]
         public void FindAllDivisors_EdgeCases_HandlesCorrectly()
         {
-            // Test with 1
+            
             var result1 = CodeGenerator.FindAllDivisors(1);
             CollectionAssert.AreEqual(new List<long> { 1 }, result1);
 
-            // Test with 0
+            
             var result2 = CodeGenerator.FindAllDivisors(0);
             Assert.AreEqual(0, result2.Count);
 
-            // Test with prime number
+            
             var result3 = CodeGenerator.FindAllDivisors(13);
             CollectionAssert.AreEqual(new List<long> { 1, 13 }, result3);
         }
@@ -190,11 +190,11 @@ namespace TestProject1
         [TestMethod]
         public void GenerateCodes_EdgeCases_HandlesCorrectly()
         {
-            // Test with minimal length and count
+            
             var codes = CodeGenerator.GenerateCodes(6, 1, out long m, out long a, out var usedK);
             Assert.AreEqual(1, codes.Count);
 
-            // Test with maximum length
+            
             var codes2 = CodeGenerator.GenerateCodes(9, 2, out m, out a, out usedK);
             Assert.AreEqual(2, codes2.Count);
         }
@@ -317,7 +317,7 @@ namespace TestProject1
             int numberOfCodes = 10;
 
             // Act
-            // Этот тест проверяет, что даже после нескольких попыток будет найден валидный модуль
+            
             long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
 
             // Assert
@@ -334,7 +334,7 @@ namespace TestProject1
             int numberOfCodes = 10;
 
             // Act
-            // Тест проверяет, что если p и q не взаимно простые, поиск продолжается
+            
             long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
 
             // Assert
@@ -349,7 +349,7 @@ namespace TestProject1
             int numberOfCodes = 10;
 
             // Act
-            // Тест проверяет, что если m не входит в нужный диапазон, поиск продолжается
+           
             long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
 
             // Assert
@@ -361,10 +361,10 @@ namespace TestProject1
         {
             // Arrange
             int lengthCode = 6;
-            int numberOfCodes = 1000; // Увеличиваем количество кодов, чтобы усложнить поиск
+            int numberOfCodes = 1000; 
 
             // Act
-            // Тест проверяет, что если phi слишком маленькое, поиск продолжается
+            
             long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
 
             // Assert
@@ -377,33 +377,33 @@ namespace TestProject1
             // Arrange
             int lengthCode = 6;
             long minValue = 100000;
-            long maxValue = 100100; // Узкий диапазон
+            long maxValue = 100100; 
 
-            // Получаем все простые числа в этом диапазоне
+           
             var primesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
                 .Where(IsPrime)
                 .Select(x => (long)x)
                 .ToList();
 
-            // Если в диапазоне нет простых чисел - пропускаем тест
+            
             if (!primesInRange.Any())
             {
                 Assert.Inconclusive("В тестовом диапазоне нет простых чисел");
                 return;
             }
 
-            // Создаем HashSet со ВСЕМИ простыми числами диапазона
+            
             var checkedA = new HashSet<long>(primesInRange);
 
             // Act
             long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
 
-            // Assert - проверяем только базовые требования
+            // Assert 
             Assert.IsTrue(IsPrime((int)prime), $"Число {prime} должно быть простым");
             Assert.AreEqual(lengthCode, prime.ToString().Length,
                 $"Число должно иметь {lengthCode} цифр");
 
-            // Если число в диапазоне - проверяем что оно в списке простых
+            
             if (prime >= minValue && prime <= maxValue)
             {
                 Assert.IsTrue(primesInRange.Contains(prime),
@@ -411,7 +411,7 @@ namespace TestProject1
             }
             else
             {
-                // Если число вне диапазона - проверяем что оно 6-значное
+                
                 Assert.IsTrue(prime >= 100000 && prime <= 999999,
                     $"Число {prime} должно быть 6-значным");
             }
@@ -478,15 +478,15 @@ namespace TestProject1
             // Arrange
             int lengthCode = 6;
             long minValue = 100000;
-            long maxValue = 100100; // Узкий диапазон
+            long maxValue = 100100; 
 
-            // Получаем все простые числа в этом диапазоне
+            
             var primesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
                 .Where(IsPrime)
                 .Select(x => (long)x)
                 .ToList();
 
-            // Если в диапазоне нет простых чисел - пропускаем тест
+            
             if (primesInRange.Count == 0)
             {
                 Assert.Inconclusive("В тестовом диапазоне нет простых чисел");
@@ -642,8 +642,7 @@ namespace TestProject1
             int numberOfCodes = 10;
             var primes = CodeGenerator.GenerateFirst2NPrimes(100);
 
-            // Этот тест проверяет, что если m выходит за границы диапазона, поиск продолжается
-            // Мы не можем напрямую проверить это, но можем убедиться что конечный результат корректен
+            
 
             // Act
             long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
@@ -659,7 +658,7 @@ namespace TestProject1
         {
             // Arrange
             int lengthCode = 6;
-            int numberOfCodes = 1000; // Большое значение чтобы увеличить шансы на маленькое phi
+            int numberOfCodes = 1000; 
 
             // Act
             long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
@@ -718,7 +717,7 @@ namespace TestProject1
             long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
 
             // Assert
-            // Проверим что m = p*q и phi = (p-1)*(q-1)
+            
             bool found = false;
             var primes = CodeGenerator.GenerateFirst2NPrimes(100);
 
@@ -763,7 +762,7 @@ namespace TestProject1
             int attempts = 0;
 
             // Act
-            long m = (long)p * q; // 20_000
+            long m = (long)p * q; 
             bool shouldContinue = m < mMin || m > mMax;
 
             // Assert
@@ -780,7 +779,7 @@ namespace TestProject1
             int attempts = 0;
 
             // Act
-            long m = (long)p * q; // 200
+            long m = (long)p * q;
             bool shouldContinue = m < mMin || m > mMax;
             if (shouldContinue) attempts++;
 
@@ -798,7 +797,7 @@ namespace TestProject1
             int attempts = 0;
 
             // Act
-            long m = (long)p * q; // 2_000_000
+            long m = (long)p * q; 
             bool shouldContinue = m < mMin || m > mMax;
             if (shouldContinue) attempts++;
 
@@ -816,7 +815,7 @@ namespace TestProject1
             int attempts = 0;
 
             // Act
-            long m = (long)p * q; // 5_000
+            long m = (long)p * q; 
             bool shouldContinue = m < mMin || m > mMax;
 
             // Assert
@@ -833,7 +832,7 @@ namespace TestProject1
             int attempts = 0;
 
             // Act
-            long m = (long)p * q; // 10_000
+            long m = (long)p * q; 
             bool shouldContinue = m < mMin || m > mMax;
 
             // Assert
@@ -845,12 +844,12 @@ namespace TestProject1
         public void Multiplication_LargeInts_NoOverflowBeforeCast()
         {
             // Arrange
-            int p = int.MaxValue / 2, q = 3; // При умножении в int будет переполнение
+            int p = int.MaxValue / 2, q = 3; 
             long mMin = 0, mMax = long.MaxValue;
             int attempts = 0;
 
             // Act
-            long m = (long)p * q; // Без переполнения, т.к. приведение к long раньше умножения
+            long m = (long)p * q; 
             bool shouldContinue = m < mMin || m > mMax;
 
             // Assert
@@ -868,12 +867,12 @@ namespace TestProject1
             bool foundInvalidM = false;
 
             // Act
-            // Будем вызывать метод несколько раз, чтобы проверить его поведение
+           
             for (int i = 0; i < 100; i++)
             {
                 long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out _, out _);
 
-                // Проверяем, что результат всегда валиден
+                
                 Assert.IsTrue(m >= mMin && m <= mMax, $"m ({m}) должно быть между {mMin} и {mMax}");
 
 
@@ -887,7 +886,6 @@ namespace TestProject1
 
             Assert.IsTrue(true, "Метод всегда возвращает m в допустимом диапазоне");
 
-            // Дополнительная проверка, что метод работает с граничными значениями
             if (foundInvalidM)
             {
                 Assert.IsTrue(true, "Метод корректно обрабатывает граничные значения m");
@@ -900,42 +898,39 @@ namespace TestProject1
             // Arrange
             int lengthCode = 6;
             long minValue = 100000;
-            long maxValue = 100100; // Узкий диапазон
+            long maxValue = 100100; 
 
-            // Получаем все простые числа в этом диапазоне
             var primesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
                 .Where(IsPrime)
                 .Select(x => (long)x)
                 .ToList();
 
-            // Проверяем, что в диапазоне есть простые числа
+            
             if (!primesInRange.Any())
             {
                 Assert.Inconclusive("В тестовом диапазоне нет простых чисел");
                 return;
             }
 
-            // Создаем HashSet со ВСЕМИ простыми числами диапазона
+            
             var checkedA = new HashSet<long>(primesInRange);
 
             // Act
             long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
 
-            // Assert - теперь проверяем только что число простое и правильной длины
             Assert.IsTrue(IsPrime((int)prime), $"Число {prime} должно быть простым");
             Assert.AreEqual(lengthCode, prime.ToString().Length,
                 $"Число должно иметь {lengthCode} цифр");
 
-            // Дополнительная проверка, что это действительно fallback-результат
             if (prime >= minValue && prime <= maxValue)
             {
-                // Если число в диапазоне, оно должно быть в primesInRange
+                
                 Assert.IsTrue(primesInRange.Contains(prime),
                     $"Если число {prime} в диапазоне, оно должно быть в списке простых чисел диапазона");
             }
             else
             {
-                // Если число вне диапазона, проверяем что оно простой нужной длины
+                
                 Assert.IsTrue(prime >= (long)Math.Pow(10, lengthCode - 1) &&
                              prime <= (long)Math.Pow(10, lengthCode) - 1,
                     $"Число {prime} должно быть {lengthCode}-значным");
@@ -949,10 +944,9 @@ namespace TestProject1
             int lengthCode = 6;
             long minValue = 100000;
             long maxValue = 999999;
-            // Create a checked set that will force all attempts to fail
+            
             var checkedA = new HashSet<long>();
-            // Add enough primes to exhaust all 100 attempts
-            // We'll add the first 100 primes in the range
+            
             int primesAdded = 0;
             for (long i = minValue; i <= maxValue && primesAdded < 100; i++)
             {
@@ -963,7 +957,7 @@ namespace TestProject1
                 }
             }
 
-            // Act - should trigger the fallback return
+            // Act 
             long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
 
             // Assert
@@ -979,9 +973,9 @@ namespace TestProject1
             int lengthCode = 8;
             long minValue = (long)Math.Pow(10, lengthCode - 1);
             long maxValue = (long)Math.Pow(10, lengthCode) - 1;
-            var checkedA = new HashSet<long> { minValue + 1, minValue + 3, minValue + 7 }; // Just some primes
+            var checkedA = new HashSet<long> { minValue + 1, minValue + 3, minValue + 7 }; 
 
-            // Act - force fallback
+            // Act 
             for (int i = 0; i < 100; i++)
             {
                 checkedA.Add(CodeGenerator.GeneratePrime(lengthCode));
@@ -997,7 +991,7 @@ namespace TestProject1
         [TestMethod]
         public void GenerateOptimizedPrime_FallbackReturn_WorksForDifferentLengths()
         {
-            // Test for various lengths
+            
             int[] lengths = { 6, 7, 8, 9 };
 
             foreach (int length in lengths)
@@ -1007,7 +1001,7 @@ namespace TestProject1
                 long maxValue = (long)Math.Pow(10, length) - 1;
                 var checkedA = new HashSet<long>();
 
-                // Add enough primes to exhaust attempts
+                
                 int primesToAdd = 100;
                 int added = 0;
                 for (long i = minValue; i <= maxValue && added < primesToAdd; i++)
@@ -1036,9 +1030,9 @@ namespace TestProject1
             int lengthCode = 6;
             long minValue = 100000;
             long maxValue = 999999;
-            // Create a checked set that will force fallback on all calls
+            
             var checkedA = new HashSet<long>();
-            // Add more primes than the attempt limit
+            
             int primesAdded = 0;
             for (long i = minValue; i <= maxValue && primesAdded < 150; i++)
             {
@@ -1066,8 +1060,8 @@ namespace TestProject1
             // Arrange
             int lengthCode = 6;
             long minValue = 100000;
-            long maxValue = 200000; // Larger range to ensure there are unchecked primes
-                                    // Add many primes but not all
+            long maxValue = 200000; 
+                                    
             var checkedA = new HashSet<long>();
             int primesAdded = 0;
             for (long i = minValue; i <= maxValue && primesAdded < 100; i++)
@@ -1121,17 +1115,17 @@ namespace TestProject1
         {
             // Arrange
             int lengthCode = 6;
-            int numberOfCodes = 1000; // Большое значение, чтобы увеличить шансы на маленькое phi
+            int numberOfCodes = 1000;
             int attempts = 0;
             bool foundValidModulus = false;
 
             // Act
-            // Будем вызывать метод несколько раз, чтобы проверить его поведение
+            
             for (int i = 0; i < 100; i++)
             {
                 long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out _);
 
-                // Проверяем, что результат всегда валиден
+                
                 long mMin = (long)Math.Pow(10, lengthCode - 1);
                 long mMax = (long)Math.Pow(10, lengthCode) - 1;
                 Assert.IsTrue(m >= mMin && m <= mMax, $"m ({m}) должно быть между {mMin} и {mMax}");
@@ -1150,10 +1144,10 @@ namespace TestProject1
             // Arrange
             int lengthCode = 6;
             long minValue = 100000;
-            long maxValue = 100100; // Узкий диапазон
+            long maxValue = 100100; 
             var checkedA = new HashSet<long>();
 
-            // Добавляем ВСЕ простые числа в этом диапазоне в checkedA
+            
             for (long i = minValue; i <= maxValue; i++)
             {
                 if (IsPrime((int)i))
@@ -1165,13 +1159,13 @@ namespace TestProject1
             // Act
             long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
 
-            // Assert - теперь ожидаем, что метод может вернуть число ВНЕ указанного диапазона
-            // так как в диапазоне все простые числа уже проверены
+            // Assert 
+            
             Assert.IsTrue(IsPrime((int)prime), $"Число {prime} должно быть простым");
             Assert.AreEqual(lengthCode, prime.ToString().Length,
                 $"Число должно иметь {lengthCode} цифр");
 
-            // Дополнительная проверка, что это действительно fallback-результат
+           
             Assert.IsFalse(checkedA.Contains(prime),
                 "Должно вернуть простое число не из checkedA");
         }
@@ -1188,7 +1182,7 @@ namespace TestProject1
             {
                 long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
 
-                // Проверка: если m == mMin или m == mMax, условие m < mMin || m > mMax было ложным
+                
                 long mMin = (long)Math.Pow(10, lengthCode - 1);
                 long mMax = (long)Math.Pow(10, lengthCode) - 1;
                 if (m != mMin && m != mMax)
@@ -1205,9 +1199,9 @@ namespace TestProject1
             // Arrange
             int lengthCode = 6;
             long minValue = 100000;
-            long maxValue = 100100; // Узкий диапазон
+            long maxValue = 100100; 
 
-            // Добавляем в checkedA все простые числа из диапазона
+            
             var checkedA = new HashSet<long>(
                 Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
                           .Where(IsPrime)
@@ -1223,7 +1217,7 @@ namespace TestProject1
             // Act
             long fallbackResult = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
 
-            // Assert: проверяем, что результат не из checkedA => сработал fallback
+            // Assert
             Assert.IsFalse(checkedA.Contains(fallbackResult), "Fallback должен вернуть число вне checkedA");
             Assert.AreEqual(lengthCode, fallbackResult.ToString().Length);
             Assert.IsTrue(IsPrime((int)fallbackResult));
@@ -1235,16 +1229,16 @@ namespace TestProject1
             // Arrange
             int lengthCode = 6;
             long minValue = 100000;
-            long maxValue = 100200; // Узкий диапазон
+            long maxValue = 100200; 
 
-            // Добавим в checkedA больше 100 разных простых чисел в диапазоне
+            
             var allPrimesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
                                              .Where(IsPrime)
                                              .Select(x => (long)x)
                                              .ToList();
 
-            // Гарантируем, что попытки будут провалены
-            var checkedA = new HashSet<long>(allPrimesInRange.Take(150)); // > 100
+            
+            var checkedA = new HashSet<long>(allPrimesInRange.Take(150)); 
 
             if (checkedA.Count < 100)
             {
@@ -1266,10 +1260,10 @@ namespace TestProject1
         {
             // Arrange
             int lengthCode = 6;
-            long fixedPrime = 123457; // Простое число
+            long fixedPrime = 123457;
             var checkedA = new HashSet<long>();
             for (int i = 0; i < 200; i++)
-                checkedA.Add(fixedPrime); // Намеренно добавляем его
+                checkedA.Add(fixedPrime); 
 
             int callCount = 0;
 
@@ -1294,8 +1288,8 @@ namespace TestProject1
             // Arrange
             int p = 5;
             int q = 7;
-            long phi = (long)(p - 1) * (q - 1); // 4 * 6 = 24
-            int numberOfCodes = 20;            // 2 * N = 40 ⇒ phi < 40 ⇒ сработает continue
+            long phi = (long)(p - 1) * (q - 1); 
+            int numberOfCodes = 20;   
 
             long mMin = 1;
             long mMax = 1000;
@@ -1315,7 +1309,7 @@ namespace TestProject1
                     continue;
                 }
 
-                break; // выйти, если вдруг phi стало подходящим (не произойдёт в этом тесте)
+                break; 
             }
 
             // Assert
