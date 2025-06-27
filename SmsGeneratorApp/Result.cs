@@ -7,15 +7,19 @@ namespace SmsGeneratorApp
     public partial class Result: Form
     {
         private Label successLabel;
-        private Label codesLabel;
-        private TrackBar fontSizeSlider;
-        private Panel codesPanel;
+        private long a;
+        private long m;
+        private List<long> kList;
 
         private List<long> codes;
 
-        public Result(List<long> codes)
+
+        public Result(List<long> codes, long a, long m, List<long> kList)
         {
             this.codes = codes;
+            this.a = a;
+            this.m = m;
+            this.kList = kList;
 
             Text = "Итог";
             Size = new Size(1200, 800);
@@ -25,6 +29,22 @@ namespace SmsGeneratorApp
         }
         private void InitializeComponents()
         {
+            var paramsButton = new RoundedButton
+            {
+                Text = "Посмотреть используемые значения",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Size = new Size(500, 60),
+                Location = new Point(350, 660),
+                BorderColor = Color.FromArgb(0, 51, 102),
+                BorderThickness = 3,
+                CornerRadius = 20
+            };
+            paramsButton.Click += (s, e) =>
+            {
+                var paramForm = new ParametersForm(a, m, kList);
+                paramForm.ShowDialog();
+            };
+            Controls.Add(paramsButton);
             // Заголовок
             var title = new RoundLabel
             {

@@ -1,4 +1,4 @@
-
+п»ї
 using System.Diagnostics;
 
 namespace SmsGeneratorApp
@@ -22,7 +22,7 @@ namespace SmsGeneratorApp
             lengthLabel = new Label();
             lengthInput = new RoundedTextBox();
             SuspendLayout();
-            // Заголовок
+            // Р—Р°РіРѕР»РѕРІРѕРє
             titleLabel = new RoundLabel
             {
                 BorderColor = Color.FromArgb(0, 51, 102),
@@ -33,10 +33,10 @@ namespace SmsGeneratorApp
                 Location = new Point(180, 30),
                 Size = new Size(900, 60),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Text = "Генератор псевдослучайных SMS-кодов"
+                Text = "Р“РµРЅРµСЂР°С‚РѕСЂ РїСЃРµРІРґРѕСЃР»СѓС‡Р°Р№РЅС‹С… SMS-РєРѕРґРѕРІ"
             };
             Controls.Add(titleLabel);
-            //Текст перед вводом длины
+            //РўРµРєСЃС‚ РїРµСЂРµРґ РІРІРѕРґРѕРј РґР»РёРЅС‹
             // 
             // lengthLabel
             // 
@@ -46,8 +46,8 @@ namespace SmsGeneratorApp
             lengthLabel.Name = "lengthLabel";
             lengthLabel.Size = new Size(501, 65);
             lengthLabel.TabIndex = 0;
-            lengthLabel.Text = "Введите длину кода";
-            //Ввод длины
+            lengthLabel.Text = "Р’РІРµРґРёС‚Рµ РґР»РёРЅСѓ РєРѕРґР°";
+            //Р’РІРѕРґ РґР»РёРЅС‹
             // 
             // lengthInput
             // 
@@ -57,7 +57,7 @@ namespace SmsGeneratorApp
             lengthInput.Padding = new Padding(10);
             lengthInput.Size = new Size(500, 81);
             lengthInput.TabIndex = 1;
-            //Текст для ввод количества
+            //РўРµРєСЃС‚ РґР»СЏ РІРІРѕРґ РєРѕР»РёС‡РµСЃС‚РІР°
             countLabel = new Label();
             countLabel.AutoSize = true;
             countLabel.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
@@ -65,8 +65,8 @@ namespace SmsGeneratorApp
             countLabel.Name = "countLabel";
             countLabel.Size = new Size(501, 65);
             countLabel.TabIndex = 2;
-            countLabel.Text = "Введите количество кодов";
-            //Ввод количества
+            countLabel.Text = "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРґРѕРІ";
+            //Р’РІРѕРґ РєРѕР»РёС‡РµСЃС‚РІР°
             countInput = new RoundedTextBox();
             countInput.BackColor = Color.Transparent;
             countInput.Location = new Point(331, 430);
@@ -77,10 +77,10 @@ namespace SmsGeneratorApp
 
             Controls.Add(countLabel);
             Controls.Add(countInput);
-            //Кнопка генерации
+            //РљРЅРѕРїРєР° РіРµРЅРµСЂР°С†РёРё
             generateButton = new RoundedButton
             {
-                Text = "Сгенерировать",
+                Text = "РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ",
                 Location = new Point(440, 550),
                 Size = new Size(300, 60),
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
@@ -99,12 +99,12 @@ namespace SmsGeneratorApp
             Controls.Add(lengthInput);
             Controls.Add(lengthLabel);
             Name = "MainMenu";
-            Text = "Генератор SMS-кодов";
+            Text = "Р“РµРЅРµСЂР°С‚РѕСЂ SMS-РєРѕРґРѕРІ";
             ResumeLayout(false);
             PerformLayout();
 
             buttonHelp = new Button();
-            buttonHelp.Text = "Помощь";
+            buttonHelp.Text = "РџРѕРјРѕС‰СЊ";
             buttonHelp.Size = new Size(200, 50);
             buttonHelp.Location = new Point(50, 700); 
             buttonHelp.Click += ButtonHelp_Click;
@@ -118,8 +118,8 @@ namespace SmsGeneratorApp
 
             if (!long.TryParse(input, out long value) || value <= 0 || value < 6 || value > 9)
             {
-                MessageBox.Show("Введите корректную длину кода (целое число от 6 до 9).",
-                    "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Р’РІРµРґРёС‚Рµ РєРѕСЂСЂРµРєС‚РЅСѓСЋ РґР»РёРЅСѓ РєРѕРґР° (С†РµР»РѕРµ С‡РёСЃР»Рѕ РѕС‚ 6 РґРѕ 9).",
+                    "РћС€РёР±РєР° РІРІРѕРґР°", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -134,8 +134,8 @@ namespace SmsGeneratorApp
 
             if (!long.TryParse(input, out long value) || value < 1 || value > 100)
             {
-                MessageBox.Show("Введите количество кодов от 1 до 100.",
-                    "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРґРѕРІ РѕС‚ 1 РґРѕ 100.",
+                    "РћС€РёР±РєР° РІРІРѕРґР°", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -148,15 +148,17 @@ namespace SmsGeneratorApp
             {
                 try
                 {
-                    long m, a;
-                    List<long> usedK;
+                    long m = 0;
+                    long a = 0;
+                    List<long> usedK = new List<long>(); // в†ђ С‚РµРїРµСЂСЊ РєРѕРјРїРёР»СЏС‚РѕСЂ С‚РѕС‡РЅРѕ Р·РЅР°РµС‚, С‡С‚Рѕ РїРµСЂРµРјРµРЅРЅР°СЏ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°
+
                     var result = await Task.Run(() =>
                     {
                         return CodeGenerator.GenerateCodes((int)length, (int)numberOfCodes, out m, out a, out usedK);
                     });
-                    Debug.WriteLine($"Сгенерировано кодов: {result.Count}");
+                    Debug.WriteLine($"РЎРіРµРЅРµСЂРёСЂРѕРІР°РЅРѕ РєРѕРґРѕРІ: {result.Count}");
 
-                    var resultForm = new Result(result);
+                    var resultForm = new Result(result, a, m, usedK);
                     resultForm.Show();
                     this.Hide();
 
@@ -167,14 +169,14 @@ namespace SmsGeneratorApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка генерации: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"РћС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё: {ex.Message}", "РћС€РёР±РєР°", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
-            string chmPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\UserGuide.chm";
+            string chmPath = @"C:\Users\Redmi\Desktop\hse\1 РљРЈР РЎ\РљРЈР РЎРђР§\SmsGenerator\UserGuide.chm";
             if (File.Exists(chmPath))
             {
                 System.Diagnostics.Process.Start(new ProcessStartInfo()
@@ -185,14 +187,14 @@ namespace SmsGeneratorApp
             }
             else
             {
-                MessageBox.Show("Файл не найден.");
+                MessageBox.Show("Р¤Р°Р№Р» РЅРµ РЅР°Р№РґРµРЅ.");
             }
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.F1)
             {
-                string chmPath = @"C:\Users\Redmi\Desktop\hse\1 КУРС\КУРСАЧ\SmsGenerator\UserGuide.chm";
+                string chmPath = @"C:\Users\Redmi\Desktop\hse\1 РљРЈР РЎ\РљРЈР РЎРђР§\SmsGenerator\UserGuide.chm";
                 if (File.Exists(chmPath))
                 {
                     Process.Start(new ProcessStartInfo
@@ -203,7 +205,7 @@ namespace SmsGeneratorApp
                 }
                 else
                 {
-                    MessageBox.Show("Файл справки не найден.");
+                    MessageBox.Show("Р¤Р°Р№Р» СЃРїСЂР°РІРєРё РЅРµ РЅР°Р№РґРµРЅ.");
                 }
                 return true;
             }

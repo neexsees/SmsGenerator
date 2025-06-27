@@ -258,7 +258,9 @@ namespace SmsGeneratorApp
                 {
                     usedK = generatedK;
                     return codes;
+                    
                 }
+                
             }
         }
 
