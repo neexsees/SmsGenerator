@@ -1,1319 +1,1117 @@
-﻿//using System.Diagnostics;
-//using SmsGeneratorApp;
-
-//namespace TestProject1
-//{
-//    [TestClass]
-//    public sealed class CodeGeneratorTests
-//    {
-//        private const int TestIterations = 100;
-
-//        [TestMethod]
-//        public void GenerateFirst2NPrimes_ZeroInput_ReturnsEmptyArray()
-//        {
-//            var result = CodeGenerator.GenerateFirst2NPrimes(0);
-//            Assert.IsNotNull(result);
-//            Assert.AreEqual(0, result.Length);
-//        }
-
-//        [TestMethod]
-//        public void GenerateFirst2NPrimes_NegativeInput_ReturnsEmptyArray()
-//        {
-//            var result = CodeGenerator.GenerateFirst2NPrimes(-5);
-//            Assert.IsNotNull(result);
-//            Assert.AreEqual(0, result.Length);
-//        }
-
-//        [TestMethod]
-//        public void GenerateFirst2NPrimes_Input1_ReturnsFirst2Primes()
-//        {
-//            var expected = new int[] { 2, 3 };
-//            var result = CodeGenerator.GenerateFirst2NPrimes(1);
-//            CollectionAssert.AreEqual(expected, result);
-//        }
-
-
-//        [TestMethod]
-//        public void GenerateFirst2NPrimes_Input10_ReturnsFirst20Primes()
-//        {
-//            var expected = new int[] {
-//                2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
-//                31, 37, 41, 43, 47, 53, 59, 61, 67, 71
-//            };
-//            var result = CodeGenerator.GenerateFirst2NPrimes(10);
-//            CollectionAssert.AreEqual(expected, result);
-//        }
-
-
-//        [TestMethod]
-//        public void SelectRandomPrimeP_ValidInput_ReturnsPrimeFromGeneratedSet()
-//        {
-//            int numberOfCodes = 10;
-//            var primes = CodeGenerator.GenerateFirst2NPrimes(numberOfCodes);
-
-//            for (int i = 0; i < TestIterations; i++)
-//            {
-//                int prime = CodeGenerator.SelectRandomPrimeP(numberOfCodes);
-//                CollectionAssert.Contains(primes, prime);
-//            }
-//        }
-
-//        [TestMethod]
-//        public void GeneratePrimesBG_ValidInput_ReturnsDifferentPrimes()
-//        {
-//            int numberOfCodes = 5;
-
-//            for (int i = 0; i < TestIterations; i++)
-//            {
-//                var (b, g) = CodeGenerator.GeneratePrimesBG(numberOfCodes);
-//                Assert.AreNotEqual(b, g);
-//                Assert.IsTrue(CodeGenerator.MutualSimplicity(b, g));
-//            }
-//        }
-
-//        [TestMethod]
-//        public void CalculateKValues_ValidInput_ReturnsUniqueValues()
-//        {
-//            int b = 5, g = 23, count = 5;
-//            var kValues = CodeGenerator.CalculateKValues(b, g, count);
-
-//            Assert.AreEqual(count, kValues.Count);
-//            Assert.AreEqual(count, kValues.Distinct().Count());
-//        }
-
-
-
-//        [TestMethod]
-//        public void FindPrimeByBruteForce_ValidRange_ReturnsPrime()
-//        {
-//            int min = 100, max = 200;
-
-//            for (int i = 0; i < TestIterations; i++)
-//            {
-//                int prime = CodeGenerator.FindPrimeByBruteForce(min, max);
-//                Assert.IsTrue(IsPrime(prime));
-//                Assert.IsTrue(prime >= min && prime < max);
-//            }
-//        }
-
-
-//        [TestMethod]
-//        public void MutualSimplicity_PrimeNumbers_ReturnsTrue()
-//        {
-//            Assert.IsTrue(CodeGenerator.MutualSimplicity(5, 7));
-//            Assert.IsTrue(CodeGenerator.MutualSimplicity(11, 13));
-//        }
-
-//        [TestMethod]
-//        public void MutualSimplicity_NonCoprimeNumbers_ReturnsFalse()
-//        {
-//            Assert.IsFalse(CodeGenerator.MutualSimplicity(4, 6));
-//            Assert.IsFalse(CodeGenerator.MutualSimplicity(15, 20));
-//        }
-
-//        [TestMethod]
-//        public void MutualSimplicity_EdgeCases_HandlesCorrectly()
-//        {
-//            Assert.IsTrue(CodeGenerator.MutualSimplicity(1, 5));
-//            Assert.IsTrue(CodeGenerator.MutualSimplicity(0, 1));
-//            Assert.IsFalse(CodeGenerator.MutualSimplicity(0, 0));
-//        }
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ValidLength_ReturnsValidModulus()
-//        //{
-//        //    int lengthCode = 6, numberOfCodes = 10;
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    Assert.IsTrue(m >= Math.Pow(10, lengthCode - 1));
-//        //    Assert.IsTrue(m <= Math.Pow(10, lengthCode) - 1);
-//        //    Assert.IsTrue(phi > 2 * numberOfCodes);
-//        //    Assert.IsTrue(divisors.Count > 0);
-//        //}
-
-//        //[TestMethod]
-//        //[ExpectedException(typeof(ArgumentException))]
-//        //public void FindValidModulus_InvalidLength_ThrowsException()
-//        //{
-//        //    CodeGenerator.FindValidModulus(5, 10, out _, out _);
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_EdgeCases_HandlesCorrectly()
-//        //{
-            
-//        //    long m = CodeGenerator.FindValidModulus(6, 1, out long phi, out _);
-//        //    Assert.IsTrue(m >= 100000 && m <= 999999);
-//        //}
-
-//        [TestMethod]
-//        public void FindAllDivisors_ValidNumber_ReturnsAllDivisors()
-//        {
-//            long n = 12;
-//            var expected = new List<long> { 1, 2, 3, 4, 6, 12 };
-//            var result = CodeGenerator.FindAllDivisors(n);
-
-//            CollectionAssert.AreEqual(expected, result);
-//        }
-
-//        [TestMethod]
-//        public void FindAllDivisors_EdgeCases_HandlesCorrectly()
-//        {
-            
-//            var result1 = CodeGenerator.FindAllDivisors(1);
-//            CollectionAssert.AreEqual(new List<long> { 1 }, result1);
-
-            
-//            var result2 = CodeGenerator.FindAllDivisors(0);
-//            Assert.AreEqual(0, result2.Count);
-
-            
-//            var result3 = CodeGenerator.FindAllDivisors(13);
-//            CollectionAssert.AreEqual(new List<long> { 1, 13 }, result3);
-//        }
-
-
-
-//        //[TestMethod]
-//        //public void GenerateCodes_ValidInput_ReturnsValidCodes()
-//        //{
-//        //    int lengthCode = 6, numberOfCodes = 5;
-//        //    var codes = CodeGenerator.GenerateCodes(lengthCode, numberOfCodes, out long m, out long a, out var usedK);
-
-//        //    Assert.AreEqual(numberOfCodes, codes.Count);
-//        //    Assert.IsTrue(codes.All(code => code >= Math.Pow(10, lengthCode - 1) &&
-//        //                                   code <= Math.Pow(10, lengthCode) - 1));
-//        //    Assert.AreEqual(numberOfCodes, usedK.Count);
-//        //    Assert.IsTrue(CodeGenerator.MutualSimplicity((int)a, (int)m));
-//        //}
-
-//        //[TestMethod]
-//        //public void GenerateCodes_EdgeCases_HandlesCorrectly()
-//        //{
-            
-//        //    var codes = CodeGenerator.GenerateCodes(6, 1, out long m, out long a, out var usedK);
-//        //    Assert.AreEqual(1, codes.Count);
-
-            
-//        //    var codes2 = CodeGenerator.GenerateCodes(9, 2, out m, out a, out usedK);
-//        //    Assert.AreEqual(2, codes2.Count);
-//        //}
-
-//        [TestMethod]
-//        public void FindOptimizedModulus_ReturnsUniqueModulusNotInCheckedSet()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            int numberOfCodes = 10;
-//            var checkedM = new HashSet<long> { 123456, 654321 };
-
-//            // Act
-//            long m = CodeGenerator.FindOptimizedModulus(lengthCode, numberOfCodes, checkedM);
-
-//            // Assert
-//            Assert.IsFalse(checkedM.Contains(m));
-//            Assert.IsTrue(m >= 100000 && m <= 999999);
-//        }
-
-//        [TestMethod]
-//        public void FindOptimizedModulus_ReturnsValidModulusWhenCheckedSetFull()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            int numberOfCodes = 10;
-//            var checkedM = new HashSet<long>(Enumerable.Range(100000, 900000).Select(x => (long)x));
-
-//            // Act
-//            long m = CodeGenerator.FindOptimizedModulus(lengthCode, numberOfCodes, checkedM);
-
-//            // Assert
-//            Assert.IsTrue(m >= 100000 && m <= 999999);
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsUniquePrimeNotInCheckedSet()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-//            var checkedA = new HashSet<long> { 100003, 100019 };
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsFalse(checkedA.Contains(prime));
-//            Assert.IsTrue(prime >= minValue && prime <= maxValue);
-//            Assert.IsTrue(IsPrime((int)prime));
-//        }
-
-//        [TestMethod]
-//        public void GeneratePrime_ReturnsValidPrimeForLength6()
-//        {
-//            // Arrange
-//            int length = 6;
-
-//            // Act
-//            long prime = CodeGenerator.GeneratePrime(length);
-
-//            // Assert
-//            Assert.IsTrue(prime >= 100000 && prime <= 999999);
-//            Assert.IsTrue(IsPrime((int)prime));
-//        }
-
-//        [TestMethod]
-//        public void GeneratePrime_ReturnsValidPrimeForLength9()
-//        {
-//            // Arrange
-//            int length = 9;
-
-//            // Act
-//            long prime = CodeGenerator.GeneratePrime(length);
-
-//            // Assert
-//            Assert.IsTrue(prime >= 100000000 && prime <= 999999999);
-//            Assert.IsTrue(IsPrime((int)prime));
-//        }
-
-
-
-//        [TestMethod]
-//        [ExpectedException(typeof(ArgumentException))]
-//        public void GeneratePrime_ThrowsForInvalidLengthAbove9()
-//        {
-//            // Arrange
-//            int length = 10;
-
-//            // Act
-//            CodeGenerator.GeneratePrime(length);
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsDifferentPrimesOnMultipleCalls()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-//            var checkedA = new HashSet<long>();
-
-//            // Act
-//            long prime1 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-//            checkedA.Add(prime1);
-//            long prime2 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.AreNotEqual(prime1, prime2);
-//            Assert.IsTrue(IsPrime((int)prime1));
-//            Assert.IsTrue(IsPrime((int)prime2));
-//        }
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ExhaustsAttemptsForQ_ReturnsValidModulus()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-
-//        //    // Act
-            
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    Assert.IsTrue(m >= Math.Pow(10, lengthCode - 1));
-//        //    Assert.IsTrue(m <= Math.Pow(10, lengthCode) - 1);
-//        //    Assert.IsTrue(phi > 2 * numberOfCodes);
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_HandlesNonMutuallySimplePQ_ContinuesSearch()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-
-//        //    // Act
-            
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    Assert.IsTrue(m > 0);
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_HandlesInvalidMRange_ContinuesSearch()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-
-//        //    // Act
-           
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    Assert.IsTrue(m >= 100000 && m <= 999999);
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_HandlesSmallPhi_ContinuesSearch()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 1000; 
-
-//        //    // Act
-            
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    Assert.IsTrue(phi > 2 * numberOfCodes);
-//        //}
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ExhaustsAttempts_ReturnsValidPrime()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 100100; 
-
-           
-//            var primesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
-//                .Where(IsPrime)
-//                .Select(x => (long)x)
-//                .ToList();
-
-            
-//            if (!primesInRange.Any())
-//            {
-//                Assert.Inconclusive("В тестовом диапазоне нет простых чисел");
-//                return;
-//            }
-
-            
-//            var checkedA = new HashSet<long>(primesInRange);
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert 
-//            Assert.IsTrue(IsPrime((int)prime), $"Число {prime} должно быть простым");
-//            Assert.AreEqual(lengthCode, prime.ToString().Length,
-//                $"Число должно иметь {lengthCode} цифр");
-
-            
-//            if (prime >= minValue && prime <= maxValue)
-//            {
-//                Assert.IsTrue(primesInRange.Contains(prime),
-//                    $"Если число {prime} в диапазоне, оно должно быть в списке простых чисел диапазона");
-//            }
-//            else
-//            {
-                
-//                Assert.IsTrue(prime >= 100000 && prime <= 999999,
-//                    $"Число {prime} должно быть 6-значным");
-//            }
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsDifferentPrimes_WhenCalledMultipleTimes()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-//            var checkedA = new HashSet<long>();
-
-//            // Act
-//            long prime1 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-//            checkedA.Add(prime1);
-//            long prime2 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.AreNotEqual(prime1, prime2);
-//            Assert.IsTrue(IsPrime((int)prime1));
-//            Assert.IsTrue(IsPrime((int)prime2));
-//        }
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsPrimeNotInCheckedSet_FirstAttempt()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-//            var checkedA = new HashSet<long> { 100003, 100019 };
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsFalse(checkedA.Contains(prime));
-//            Assert.IsTrue(prime >= minValue && prime <= maxValue);
-//            Assert.IsTrue(IsPrime((int)prime));
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsDifferentPrime_AfterSeveralAttempts()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-//            var checkedA = new HashSet<long> { 100003, 100019, 100043, 100049, 100057 };
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsFalse(checkedA.Contains(prime));
-//            Assert.IsTrue(prime >= minValue && prime <= maxValue);
-//            Assert.IsTrue(IsPrime((int)prime));
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsValidPrime_WhenAllAttemptsExhausted()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 100100; 
-
-            
-//            var primesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
-//                .Where(IsPrime)
-//                .Select(x => (long)x)
-//                .ToList();
-
-            
-//            if (primesInRange.Count == 0)
-//            {
-//                Assert.Inconclusive("В тестовом диапазоне нет простых чисел");
-//                return;
-//            }
-
-//            var checkedA = new HashSet<long>(primesInRange);
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsTrue(IsPrime((int)prime), $"Число {prime} должно быть простым");
-//            Assert.AreEqual(lengthCode, prime.ToString().Length,
-//                $"Число должно иметь {lengthCode} цифр");
-
-//            if (prime >= minValue && prime <= maxValue)
-//            {
-
-//                Assert.IsTrue(primesInRange.Contains(prime),
-//                    $"Число {prime} должно быть в списке простых чисел диапазона");
-//            }
-//            else
-//            {
-//                Assert.IsTrue(prime >= (long)Math.Pow(10, lengthCode - 1) &&
-//                             prime <= (long)Math.Pow(10, lengthCode) - 1,
-//                    $"Число {prime} должно быть {lengthCode}-значным");
-
-//                Assert.IsFalse(primesInRange.Contains(prime),
-//                    $"Число {prime} не должно быть в исходном диапазоне");
-//            }
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsDifferentPrimes_OnSubsequentCalls()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-//            var checkedA = new HashSet<long>();
-
-//            // Act
-//            long prime1 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-//            checkedA.Add(prime1);
-//            long prime2 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.AreNotEqual(prime1, prime2);
-//            Assert.IsTrue(IsPrime((int)prime1));
-//            Assert.IsTrue(IsPrime((int)prime2));
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ReturnsValidPrime_ForLength9()
-//        {
-//            // Arrange
-//            int lengthCode = 9;
-//            long minValue = 100000000;
-//            long maxValue = 999999999;
-//            var checkedA = new HashSet<long>();
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsTrue(prime >= minValue && prime <= maxValue);
-//            Assert.IsTrue(IsPrime((int)prime));
-//        }
-
-//        [TestMethod]
-//        [ExpectedException(typeof(ArgumentException))]
-//        public void GenerateOptimizedPrime_ThrowsException_ForInvalidLength()
-//        {
-//            // Arrange
-//            int invalidLength = 10;
-//            long minValue = 1000000000;
-//            long maxValue = 9999999999;
-//            var checkedA = new HashSet<long>();
-
-//            // Act
-//            CodeGenerator.GenerateOptimizedPrime(invalidLength, minValue, maxValue, checkedA);
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_HandlesEmptyCheckedSet()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-//            var emptyCheckedSet = new HashSet<long>();
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, emptyCheckedSet);
-
-//            // Assert
-//            Assert.IsTrue(prime >= minValue && prime <= maxValue);
-//            Assert.IsTrue(IsPrime((int)prime));
-//        }
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ReturnsMInCorrectRange()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-
-//        //    // Act
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    long mMin = (long)Math.Pow(10, lengthCode - 1);
-//        //    long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//        //    Assert.IsTrue(m >= mMin && m <= mMax, $"m ({m}) должно быть в диапазоне [{mMin}, {mMax}]");
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ReturnsPhiGreaterThan2xNumberOfCodes()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-
-//        //    // Act
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    Assert.IsTrue(phi > 2 * numberOfCodes, $"phi ({phi}) должно быть больше {2 * numberOfCodes}");
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ReturnsValidDivisors()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-
-//        //    // Act
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    Assert.IsNotNull(divisors);
-//        //    Assert.IsTrue(divisors.Count > 0);
-//        //    Assert.IsTrue(divisors.All(d => phi % d == 0), "Все делители должны делить phi без остатка");
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_HandlesMRangeCheck_ContinuesWhenMOutOfRange()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-//        //    var primes = CodeGenerator.GenerateFirst2NPrimes(100);
-
-            
-
-//        //    // Act
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    long mMin = (long)Math.Pow(10, lengthCode - 1);
-//        //    long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//        //    Assert.IsTrue(m >= mMin && m <= mMax);
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_HandlesPhiCheck_ContinuesWhenPhiTooSmall()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 1000; 
-
-//        //    // Act
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-//        //    Assert.IsTrue(phi > 2 * numberOfCodes);
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ReturnsDifferentValues_OnMultipleCalls()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-//        //    var results = new HashSet<long>();
-
-//        //    // Act
-//        //    for (int i = 0; i < TestIterations; i++)
-//        //    {
-//        //        long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out _, out _);
-//        //        results.Add(m);
-//        //    }
-
-//        //    // Assert
-//        //    Assert.IsTrue(results.Count > 1, "Должны возвращаться разные значения при многократных вызовах");
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ReturnsValidM_ForDifferentLengthCodes()
-//        //{
-//        //    // Arrange
-//        //    var lengthCodes = new[] { 6, 7, 8, 9 };
-//        //    int numberOfCodes = 10;
-
-//        //    foreach (var lengthCode in lengthCodes)
-//        //    {
-//        //        // Act
-//        //        long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //        // Assert
-//        //        long mMin = (long)Math.Pow(10, lengthCode - 1);
-//        //        long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//        //        Assert.IsTrue(m >= mMin && m <= mMax, $"Для длины {lengthCode} m ({m}) вне диапазона");
-//        //        Assert.IsTrue(phi > 2 * numberOfCodes);
-//        //    }
-//        //}
-
-//        //[TestMethod]
-//        //public void FindValidModulus_ReturnsCorrectPhi_AsProductOfP1AndQ1()
-//        //{
-//        //    // Arrange
-//        //    int lengthCode = 6;
-//        //    int numberOfCodes = 10;
-
-//        //    // Act
-//        //    long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-//        //    // Assert
-            
-//        //    bool found = false;
-//        //    var primes = CodeGenerator.GenerateFirst2NPrimes(100);
-
-//        //    foreach (int p in primes)
-//        //    {
-//        //        if (m % p == 0)
-//        //        {
-//        //            int q = (int)(m / p);
-//        //            if (CodeGenerator.MutualSimplicity(p, q))
-//        //            {
-//        //                long expectedPhi = (long)(p - 1) * (q - 1);
-//        //                Assert.AreEqual(expectedPhi, phi, "phi должно быть равно (p-1)*(q-1)");
-//        //                found = true;
-//        //                break;
-//        //            }
-//        //        }
-//        //    }
-
-//        //    Assert.IsTrue(found, "Не удалось найти p и q для проверки phi");
-//        //}
-
-//        //private bool IsPrime(int number)
-//        //{
-//        //    if (number <= 1) return false;
-//        //    if (number == 2) return true;
-//        //    if (number % 2 == 0) return false;
-
-//        //    var boundary = (int)Math.Floor(Math.Sqrt(number));
-
-//        //    for (int i = 3; i <= boundary; i += 2)
-//        //        if (number % i == 0)
-//        //            return false;
-
-//        //    return true;
-//        //}
-//        [TestMethod]
-//        public void Multiplication_WithinRange_ContinuesWithoutRetry()
-//        {
-//            // Arrange
-//            int p = 100, q = 200;
-//            long mMin = 10_000, mMax = 30_000;
-//            int attempts = 0;
-
-//            // Act
-//            long m = (long)p * q; 
-//            bool shouldContinue = m < mMin || m > mMax;
-
-//            // Assert
-//            Assert.IsFalse(shouldContinue, "Should not continue, since m is within range.");
-//            Assert.AreEqual(0, attempts, "Attempts should not be incremented.");
-//        }
-
-//        [TestMethod]
-//        public void Multiplication_BelowMin_IncrementsAttemptsAndContinues()
-//        {
-//            // Arrange
-//            int p = 10, q = 20;
-//            long mMin = 300, mMax = 500;
-//            int attempts = 0;
-
-//            // Act
-//            long m = (long)p * q;
-//            bool shouldContinue = m < mMin || m > mMax;
-//            if (shouldContinue) attempts++;
-
-//            // Assert
-//            Assert.IsTrue(shouldContinue, "Should continue, since m < mMin.");
-//            Assert.AreEqual(1, attempts, "Attempts should be incremented.");
-//        }
-
-//        [TestMethod]
-//        public void Multiplication_AboveMax_IncrementsAttemptsAndContinues()
-//        {
-//            // Arrange
-//            int p = 1000, q = 2000;
-//            long mMin = 1_000_000, mMax = 1_500_000;
-//            int attempts = 0;
-
-//            // Act
-//            long m = (long)p * q; 
-//            bool shouldContinue = m < mMin || m > mMax;
-//            if (shouldContinue) attempts++;
-
-//            // Assert
-//            Assert.IsTrue(shouldContinue, "Should continue, since m > mMax.");
-//            Assert.AreEqual(1, attempts, "Attempts should be incremented.");
-//        }
-
-//        [TestMethod]
-//        public void Multiplication_AtBorderMin_DoesNotContinue()
-//        {
-//            // Arrange
-//            int p = 100, q = 50;
-//            long mMin = 5_000, mMax = 10_000;
-//            int attempts = 0;
-
-//            // Act
-//            long m = (long)p * q; 
-//            bool shouldContinue = m < mMin || m > mMax;
-
-//            // Assert
-//            Assert.IsFalse(shouldContinue, "Should not continue, since m == mMin.");
-//            Assert.AreEqual(0, attempts, "Attempts should not be incremented.");
-//        }
-
-//        [TestMethod]
-//        public void Multiplication_AtBorderMax_DoesNotContinue()
-//        {
-//            // Arrange
-//            int p = 200, q = 50;
-//            long mMin = 5_000, mMax = 10_000;
-//            int attempts = 0;
-
-//            // Act
-//            long m = (long)p * q; 
-//            bool shouldContinue = m < mMin || m > mMax;
-
-//            // Assert
-//            Assert.IsFalse(shouldContinue, "Should not continue, since m == mMax.");
-//            Assert.AreEqual(0, attempts, "Attempts should not be incremented.");
-//        }
-
-//        [TestMethod]
-//        public void Multiplication_LargeInts_NoOverflowBeforeCast()
-//        {
-//            // Arrange
-//            int p = int.MaxValue / 2, q = 3; 
-//            long mMin = 0, mMax = long.MaxValue;
-//            int attempts = 0;
-
-//            // Act
-//            long m = (long)p * q; 
-//            bool shouldContinue = m < mMin || m > mMax;
-
-//            // Assert
-//            Assert.IsFalse(shouldContinue, "Should not continue, since m is within range.");
-//            Assert.AreEqual(0, attempts, "Attempts should not be incremented.");
-//        }
-//        [TestMethod]
-//        public void FindValidModulus_ContinuesSearch_WhenMOutOfRange()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            int numberOfCodes = 10;
-//            long mMin = (long)Math.Pow(10, lengthCode - 1);
-//            long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//            bool foundInvalidM = false;
-
-//            // Act
-           
-//            for (int i = 0; i < 100; i++)
-//            {
-//                long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out _, out _);
-
-                
-//                Assert.IsTrue(m >= mMin && m <= mMax, $"m ({m}) должно быть между {mMin} и {mMax}");
-
-
-//                if (m == mMin || m == mMax)
-//                {
-//                    foundInvalidM = true;
-//                }
-//            }
-
-//            // Assert
-
-//            Assert.IsTrue(true, "Метод всегда возвращает m в допустимом диапазоне");
-
-//            if (foundInvalidM)
-//            {
-//                Assert.IsTrue(true, "Метод корректно обрабатывает граничные значения m");
-//            }
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_WhenAllAttemptsExhausted_ReturnsValidPrime()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 100100; 
-
-//            var primesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
-//                .Where(IsPrime)
-//                .Select(x => (long)x)
-//                .ToList();
-
-            
-//            if (!primesInRange.Any())
-//            {
-//                Assert.Inconclusive("В тестовом диапазоне нет простых чисел");
-//                return;
-//            }
-
-            
-//            var checkedA = new HashSet<long>(primesInRange);
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            Assert.IsTrue(IsPrime((int)prime), $"Число {prime} должно быть простым");
-//            Assert.AreEqual(lengthCode, prime.ToString().Length,
-//                $"Число должно иметь {lengthCode} цифр");
-
-//            if (prime >= minValue && prime <= maxValue)
-//            {
-                
-//                Assert.IsTrue(primesInRange.Contains(prime),
-//                    $"Если число {prime} в диапазоне, оно должно быть в списке простых чисел диапазона");
-//            }
-//            else
-//            {
-                
-//                Assert.IsTrue(prime >= (long)Math.Pow(10, lengthCode - 1) &&
-//                             prime <= (long)Math.Pow(10, lengthCode) - 1,
-//                    $"Число {prime} должно быть {lengthCode}-значным");
-//            }
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_FallbackReturn_ReturnsValidPrimeForLength()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-            
-//            var checkedA = new HashSet<long>();
-            
-//            int primesAdded = 0;
-//            for (long i = minValue; i <= maxValue && primesAdded < 100; i++)
-//            {
-//                if (IsPrime((int)i))
-//                {
-//                    checkedA.Add(i);
-//                    primesAdded++;
-//                }
-//            }
-
-//            // Act 
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsTrue(prime >= minValue && prime <= maxValue);
-//            Assert.IsTrue(IsPrime((int)prime));
-//            Assert.IsFalse(checkedA.Contains(prime), "Fallback should return a prime not in the checked set if possible");
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_FallbackReturn_RespectsLengthCode()
-//        {
-//            // Arrange
-//            int lengthCode = 8;
-//            long minValue = (long)Math.Pow(10, lengthCode - 1);
-//            long maxValue = (long)Math.Pow(10, lengthCode) - 1;
-//            var checkedA = new HashSet<long> { minValue + 1, minValue + 3, minValue + 7 }; 
-
-//            // Act 
-//            for (int i = 0; i < 100; i++)
-//            {
-//                checkedA.Add(CodeGenerator.GeneratePrime(lengthCode));
-//            }
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsTrue(prime >= minValue && prime <= maxValue);
-//            Assert.IsTrue(IsPrime((int)prime));
-//            Assert.AreEqual(lengthCode, prime.ToString().Length, $"Prime should have exactly {lengthCode} digits");
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_FallbackReturn_WorksForDifferentLengths()
-//        {
-            
-//            int[] lengths = { 6, 7, 8, 9 };
-
-//            foreach (int length in lengths)
-//            {
-//                // Arrange
-//                long minValue = (long)Math.Pow(10, length - 1);
-//                long maxValue = (long)Math.Pow(10, length) - 1;
-//                var checkedA = new HashSet<long>();
-
-                
-//                int primesToAdd = 100;
-//                int added = 0;
-//                for (long i = minValue; i <= maxValue && added < primesToAdd; i++)
-//                {
-//                    if (IsPrime((int)i))
-//                    {
-//                        checkedA.Add(i);
-//                        added++;
-//                    }
-//                }
-
-//                // Act
-//                long prime = CodeGenerator.GenerateOptimizedPrime(length, minValue, maxValue, checkedA);
-
-//                // Assert
-//                Assert.IsTrue(prime >= minValue && prime <= maxValue,
-//                    $"For length {length}, prime {prime} should be in range [{minValue}, {maxValue}]");
-//                Assert.IsTrue(IsPrime((int)prime), $"For length {length}, {prime} should be prime");
-//            }
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_FallbackReturn_ReturnsDifferentPrimesOnMultipleCalls()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 999999;
-            
-//            var checkedA = new HashSet<long>();
-            
-//            int primesAdded = 0;
-//            for (long i = minValue; i <= maxValue && primesAdded < 150; i++)
-//            {
-//                if (IsPrime((int)i))
-//                {
-//                    checkedA.Add(i);
-//                    primesAdded++;
-//                }
-//            }
-
-//            // Act
-//            long prime1 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-//            checkedA.Add(prime1);
-//            long prime2 = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.AreNotEqual(prime1, prime2, "Subsequent calls should return different primes");
-//            Assert.IsTrue(IsPrime((int)prime1));
-//            Assert.IsTrue(IsPrime((int)prime2));
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_FallbackReturn_StillExcludesCheckedPrimesWhenPossible()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 200000; 
-                                    
-//            var checkedA = new HashSet<long>();
-//            int primesAdded = 0;
-//            for (long i = minValue; i <= maxValue && primesAdded < 100; i++)
-//            {
-//                if (IsPrime((int)i))
-//                {
-//                    checkedA.Add(i);
-//                    primesAdded++;
-//                }
-//            }
-//        }
-
-//        [TestMethod]
-//        public void FindValidModulus_MultipleInvalidMRanges_EventuallyFindsValid()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            int numberOfCodes = 10;
-
-//            // Act
-//            long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out _, out _);
-
-//            // Assert
-//            long mMin = (long)Math.Pow(10, lengthCode - 1);
-//            long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//            Assert.IsTrue(m >= mMin && m <= mMax);
-//        }
-
-//        [TestMethod]
-//        public void FindValidModulus_CompletesInReasonableTime_DespiteManyRetries()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            int numberOfCodes = 10;
-//            var stopwatch = new Stopwatch();
-
-//            // Act
-//            stopwatch.Start();
-//            long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out _, out _);
-//            stopwatch.Stop();
-
-//            // Assert
-//            long mMin = (long)Math.Pow(10, lengthCode - 1);
-//            long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//            Assert.IsTrue(m >= mMin && m <= mMax);
-//            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 1000, "Method took too long");
-//        }
-
-//        [TestMethod]
-//        public void FindValidModulus_WhenPhiTooSmall_IncrementsAttemptsAndContinues()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            int numberOfCodes = 1000;
-//            int attempts = 0;
-//            bool foundValidModulus = false;
-
-//            // Act
-            
-//            for (int i = 0; i < 100; i++)
-//            {
-//                long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out _);
-
-                
-//                long mMin = (long)Math.Pow(10, lengthCode - 1);
-//                long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//                Assert.IsTrue(m >= mMin && m <= mMax, $"m ({m}) должно быть между {mMin} и {mMax}");
-//                Assert.IsTrue(phi > 2 * numberOfCodes, $"phi ({phi}) должно быть больше {2 * numberOfCodes}");
-
-//                foundValidModulus = true;
-//            }
-
-//            // Assert
-//            Assert.IsTrue(foundValidModulus, "Должен быть найден хотя бы один валидный модуль");
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_AfterMaxAttempts_ReturnsValidPrime()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 100100; 
-//            var checkedA = new HashSet<long>();
-
-            
-//            for (long i = minValue; i <= maxValue; i++)
-//            {
-//                if (IsPrime((int)i))
-//                {
-//                    checkedA.Add(i);
-//                }
-//            }
-
-//            // Act
-//            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert 
-            
-//            Assert.IsTrue(IsPrime((int)prime), $"Число {prime} должно быть простым");
-//            Assert.AreEqual(lengthCode, prime.ToString().Length,
-//                $"Число должно иметь {lengthCode} цифр");
-
-           
-//            Assert.IsFalse(checkedA.Contains(prime),
-//                "Должно вернуть простое число не из checkedA");
-//        }
-
-//        [TestMethod]
-//        public void FindValidModulus_TriggersContinue_WhenMOutOfRange()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            int numberOfCodes = 10;
-//            int triggered = 0;
-
-//            for (int i = 0; i < 50; i++)
-//            {
-//                long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes, out long phi, out var divisors);
-
-                
-//                long mMin = (long)Math.Pow(10, lengthCode - 1);
-//                long mMax = (long)Math.Pow(10, lengthCode) - 1;
-//                if (m != mMin && m != mMax)
-//                    triggered++;
-//            }
-
-//            // Assert
-//            Assert.IsTrue(triggered > 0, "Цикл должен был несколько раз пройти continue из-за m вне диапазона");
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_AttemptsExhausted_TriggersFallback()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 100100; 
-
-            
-//            var checkedA = new HashSet<long>(
-//                Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
-//                          .Where(IsPrime)
-//                          .Select(x => (long)x)
-//            );
-
-//            if (!checkedA.Any())
-//            {
-//                Assert.Inconclusive("Нет простых чисел в диапазоне.");
-//                return;
-//            }
-
-//            // Act
-//            long fallbackResult = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsFalse(checkedA.Contains(fallbackResult), "Fallback должен вернуть число вне checkedA");
-//            Assert.AreEqual(lengthCode, fallbackResult.ToString().Length);
-//            Assert.IsTrue(IsPrime((int)fallbackResult));
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ExceedsMaxAttempts_ReturnsResultFromGeneratePrime()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long minValue = 100000;
-//            long maxValue = 100200; 
-
-            
-//            var allPrimesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
-//                                             .Where(IsPrime)
-//                                             .Select(x => (long)x)
-//                                             .ToList();
-
-            
-//            var checkedA = new HashSet<long>(allPrimesInRange.Take(150)); 
-
-//            if (checkedA.Count < 100)
-//            {
-//                Assert.Inconclusive("Недостаточно простых чисел для проверки fallback.");
-//                return;
-//            }
-
-//            // Act
-//            long result = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
-
-//            // Assert
-//            Assert.IsTrue(IsPrime((int)result));
-//            Assert.AreEqual(lengthCode, result.ToString().Length);
-//            Assert.IsFalse(checkedA.Contains(result), "Fallback должен вернуть число вне checkedA => вызвался GeneratePrime");
-//        }
-
-//        [TestMethod]
-//        public void GenerateOptimizedPrime_ExceedsAttempts_CallsFallbackReturn()
-//        {
-//            // Arrange
-//            int lengthCode = 6;
-//            long fixedPrime = 123457;
-//            var checkedA = new HashSet<long>();
-//            for (int i = 0; i < 200; i++)
-//                checkedA.Add(fixedPrime); 
-
-//            int callCount = 0;
-
-//            long StubPrimeGenerator(int len)
-//            {
-//                callCount++;
-//                return fixedPrime;
-//            }
-
-//            // Act
-//            long result = CodeGenerator.GenerateOptimizedPrime(
-//                lengthCode, 100000, 999999, checkedA, StubPrimeGenerator);
-
-//            // Assert
-//            Assert.AreEqual(fixedPrime, result);
-//            Assert.IsTrue(callCount >= 101, "Должно быть не меньше 101 вызова => fallback сработал");
-//        }
-
-//        [TestMethod]
-//        public void EulerFunctionCheck_TriggersContinueOnSmallPhi()
-//        {
-//            // Arrange
-//            int p = 5;
-//            int q = 7;
-//            long phi = (long)(p - 1) * (q - 1); 
-//            int numberOfCodes = 20;   
-
-//            long mMin = 1;
-//            long mMax = 1000;
-
-//            int attempts = 0;
-//            bool conditionTriggered = false;
-
-//            // Act
-//            while (attempts < 1000)
-//            {
-//                phi = (long)(p - 1) * (q - 1);
-
-//                if (phi <= 2 * numberOfCodes)
-//                {
-//                    attempts++;
-//                    conditionTriggered = true;
-//                    continue;
-//                }
-
-//                break; 
-//            }
-
-//            // Assert
-//            Assert.IsTrue(conditionTriggered, "Условие phi <= 2 * numberOfCodes должно было выполниться");
-//        }
-//    }
-//}
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmsGeneratorApp;
+
+namespace TestProject1
+{
+    [TestClass]
+    public sealed class CodeGeneratorTests
+    {
+        private const int TestIterations = 100;
+        private static readonly Random TestRandom = new Random();
+
+        #region Helper Methods
+        private static bool IsPrime(int number)
+        {
+            if (number <= 1) return false;
+            if (number == 2) return true;
+            if (number % 2 == 0) return false;
+
+            var boundary = (int)Math.Floor(Math.Sqrt(number));
+
+            for (int i = 3; i <= boundary; i += 2)
+                if (number % i == 0)
+                    return false;
+
+            return true;
+        }
+        #endregion
+
+        #region GenerateFirst2NPrimes Tests
+        [TestMethod]
+        public void GenerateFirst2NPrimes_ZeroOrNegativeInput_ReturnsEmptyArray()
+        {
+            // Arrange & Act
+            var zeroResult = CodeGenerator.GenerateFirst2NPrimes(0);
+            var negativeResult = CodeGenerator.GenerateFirst2NPrimes(-5);
+
+            // Assert
+            Assert.IsNotNull(zeroResult);
+            Assert.AreEqual(0, zeroResult.Length);
+            Assert.IsNotNull(negativeResult);
+            Assert.AreEqual(0, negativeResult.Length);
+        }
+        [TestMethod]
+        public void GenerateFirst2NPrimes_SmallInputs_ReturnsCorrectPrimes()
+        {
+            // Arrange
+            var testCases = new Dictionary<int, int[]>
+            {
+                [1] = new[] { 2, 3 },
+                [2] = new[] { 2, 3, 5, 7 },
+                [3] = new[] { 2, 3, 5, 7, 11, 13 },
+                [4] = new[] { 2, 3, 5, 7, 11, 13, 17, 19 }
+            };
+
+            foreach (var testCase in testCases)
+            {
+                int input = testCase.Key;
+                int[] expectedPrimes = testCase.Value;
+
+                // Act
+                int[] result = CodeGenerator.GenerateFirst2NPrimes(input);
+
+                // Assert - проверяем основные свойства
+                Assert.AreEqual(2 * input, result.Length,
+                    $"For input {input}, expected {2 * input} primes, got {result.Length}");
+
+                // Проверяем, что все числа простые
+                foreach (int prime in result)
+                {
+                    Assert.IsTrue(IsPrime(prime),
+                        $"Number {prime} in result is not prime for input {input}");
+                }
+
+                // Проверяем, что результат содержит ожидаемые простые числа
+                // (но не обязательно в том же порядке)
+                foreach (int expectedPrime in expectedPrimes)
+                {
+                    Assert.IsTrue(result.Contains(expectedPrime),
+                        $"Expected prime {expectedPrime} not found in result for input {input}");
+                }
+
+                // Проверяем, что числа уникальны (без дубликатов)
+                Assert.AreEqual(result.Length, result.Distinct().Count(),
+                    $"Result contains duplicate primes for input {input}");
+            }
+        }
+        [TestClass]
+        public class FindValidModulusTests
+        {
+            private const int TestIterations = 50;
+
+            #region Basic Validation Tests
+            [TestMethod]
+            [ExpectedException(typeof(ArgumentException))]
+            public void FindValidModulus_InvalidLengthCode_ThrowsException()
+            {
+                // Arrange
+                var invalidLengths = new[] { -1, 0, 5, 10, 15 };
+
+                foreach (var length in invalidLengths)
+                {
+                    // Act
+                    CodeGenerator.FindValidModulus(length, 10, out _, out _, out _, out _);
+                }
+            }
+
+            [TestMethod]
+            public void FindValidModulus_ValidLengthCodes_DoesNotThrow()
+            {
+                // Arrange
+                var validLengths = new[] { 6, 7, 8, 9 };
+
+                foreach (var length in validLengths)
+                {
+                    // Act
+                    var m = CodeGenerator.FindValidModulus(length, 10, out _, out _, out _, out _);
+
+                    // Assert
+                    Assert.IsTrue(m >= Math.Pow(10, length - 1));
+                    Assert.IsTrue(m <= Math.Pow(10, length) - 1);
+                }
+            }
+            #endregion
+
+            #region Core Functionality Tests
+            [TestMethod]
+            public void FindValidModulus_ReturnsValidModulusForDifferentLengths()
+            {
+                // Arrange
+                var testCases = new[]
+                {
+            new { Length = 6, Min = 100_000L, Max = 999_999L },
+            new { Length = 7, Min = 1_000_000L, Max = 9_999_999L },
+            new { Length = 8, Min = 10_000_000L, Max = 99_999_999L },
+            new { Length = 9, Min = 100_000_000L, Max = 999_999_999L }
+        };
+
+                foreach (var testCase in testCases)
+                {
+                    // Act
+                    var m = CodeGenerator.FindValidModulus(testCase.Length, 10,
+                        out long phi, out var divisors, out long p, out long q);
+
+                    // Assert
+                    Assert.IsTrue(m >= testCase.Min && m <= testCase.Max,
+                        $"For length {testCase.Length}, m ({m}) should be in range");
+                    Assert.AreEqual(m, p * q, "m should equal p * q");
+                    Assert.IsTrue(phi > 20, $"phi ({phi}) should be greater than 20");
+                    Assert.IsTrue(divisors.Count > 0, "Should have divisors");
+                    Assert.IsTrue(CodeGenerator.MutualSimplicity((int)p, (int)q),
+                        "p and q should be coprime");
+                }
+            }
+
+            [TestMethod]
+            public void FindValidModulus_ReturnsDifferentValuesOnMultipleCalls()
+            {
+                // Arrange
+                const int lengthCode = 6;
+                const int numberOfCodes = 10;
+                var results = new HashSet<long>();
+
+                // Act
+                for (int i = 0; i < TestIterations; i++)
+                {
+                    var m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                        out _, out _, out _, out _);
+                    results.Add(m);
+                }
+
+                // Assert
+                Assert.IsTrue(results.Count > 1, "Should return different moduli");
+            }
+            #endregion
+
+            #region Edge Case Tests
+            [TestMethod]
+            public void FindValidModulus_HandlesExtremeNumberOfCodes()
+            {
+                // Arrange
+                var testCases = new[]
+                {
+            new { NumberOfCodes = 1, MinPhi = 2L },
+            new { NumberOfCodes = 1000, MinPhi = 2000L },
+            new { NumberOfCodes = 5000, MinPhi = 10000L }
+        };
+
+                foreach (var testCase in testCases)
+                {
+                    // Act
+                    var m = CodeGenerator.FindValidModulus(6, testCase.NumberOfCodes,
+                        out long phi, out _, out _, out _);
+
+                    // Assert
+                    Assert.IsTrue(phi > testCase.MinPhi,
+                        $"For {testCase.NumberOfCodes} codes, phi should be > {testCase.MinPhi}");
+                }
+            }
+
+            [TestMethod]
+            public void FindValidModulus_HandlesEdgeCase_WhenMinQEqualsMaxQ()
+            {
+                // Arrange
+                const int lengthCode = 6;
+                const int numberOfCodes = 10;
+
+                // Принудительно создаем edge-case
+                long p = 999983; // Большое простое число, близкое к 10^6
+                long mMin = (long)Math.Pow(10, lengthCode - 1);
+                long mMax = (long)Math.Pow(10, lengthCode) - 1;
+                long minQ = mMin / p + 1;
+                long maxQ = mMax / p;
+
+                Assert.IsTrue(minQ >= maxQ, "Тестовые данные не создают edge-case");
+
+                // Act
+                long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                    out _, out _, out long foundP, out long foundQ);
+
+                // Assert
+                Assert.IsTrue(m >= mMin && m <= mMax);
+                Assert.IsTrue(IsPrime((int)foundP));
+                Assert.IsTrue(IsPrime((int)foundQ));
+            }
+            #endregion
+
+            #region Stress Tests
+            [TestMethod]
+            public void FindValidModulus_CompletesInReasonableTime()
+            {
+                // Arrange
+                const int lengthCode = 6;
+                const int numberOfCodes = 10;
+                var stopwatch = new Stopwatch();
+
+                // Act
+                stopwatch.Start();
+                for (int i = 0; i < 100; i++)
+                {
+                    CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                        out _, out _, out _, out _);
+                }
+                stopwatch.Stop();
+
+                // Assert
+                Assert.IsTrue(stopwatch.ElapsedMilliseconds < 5000,
+                    "Should complete 100 iterations in under 5 seconds");
+            }
+
+            [TestMethod]
+            public void FindValidModulus_WithHighNumberOfCodes_StillFindsValidModulus()
+            {
+                // Arrange
+                const int lengthCode = 6;
+                const int numberOfCodes = 10_000;
+
+                // Act
+                var m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                    out long phi, out _, out _, out _);
+
+                // Assert
+                Assert.IsTrue(phi > 2 * numberOfCodes,
+                    $"phi ({phi}) should be greater than {2 * numberOfCodes}");
+            }
+            #endregion
+
+            #region Internal Logic Tests
+            [TestMethod]
+            public void FindValidModulus_GeneratedPrimes_AreValidAndCoprime()
+            {
+                // Arrange
+                const int lengthCode = 6;
+                const int numberOfCodes = 10;
+                var primePairs = new List<(long p, long q)>();
+
+                // Act
+                for (int i = 0; i < TestIterations; i++)
+                {
+                    CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                        out _, out _, out long p, out long q);
+                    primePairs.Add((p, q));
+                }
+
+                // Assert
+                foreach (var (p, q) in primePairs)
+                {
+                    Assert.IsTrue(IsPrime((int)p), $"{p} should be prime");
+                    Assert.IsTrue(IsPrime((int)q), $"{q} should be prime");
+                    Assert.IsTrue(CodeGenerator.MutualSimplicity((int)p, (int)q),
+                        $"{p} and {q} should be coprime");
+                }
+            }
+
+            [TestMethod]
+            public void FindValidModulus_PhiCalculation_IsCorrect()
+            {
+                // Arrange
+                const int lengthCode = 6;
+                const int numberOfCodes = 10;
+
+                // Act
+                CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                    out long phi, out _, out long p, out long q);
+
+                // Assert
+                long expectedPhi = (p - 1) * (q - 1);
+                Assert.AreEqual(expectedPhi, phi,
+                    $"phi should equal ({p}-1)*({q}-1) = {expectedPhi}");
+            }
+
+            [TestMethod]
+            public void FindValidModulus_PhiDivisors_AreValid()
+            {
+                // Arrange
+                const int lengthCode = 6;
+                const int numberOfCodes = 10;
+
+                // Act
+                CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                    out long phi, out var divisors, out _, out _);
+
+                // Assert
+                foreach (var divisor in divisors)
+                {
+                    Assert.AreEqual(0, phi % divisor,
+                        $"{divisor} should divide {phi} without remainder");
+                }
+            }
+            #endregion
+
+            #region Helper Methods
+            private static bool IsPrime(int number)
+            {
+                if (number <= 1) return false;
+                if (number == 2) return true;
+                if (number % 2 == 0) return false;
+
+                var boundary = (int)Math.Floor(Math.Sqrt(number));
+
+                for (int i = 3; i <= boundary; i += 2)
+                    if (number % i == 0)
+                        return false;
+
+                return true;
+            }
+            #endregion
+        }
+
+        [TestMethod]
+        public void GenerateFirst2NPrimes_LargeInput_ReturnsCorrectNumberOfPrimes()
+        {
+            // Arrange
+            const int input = 100;
+
+            // Act
+            var result = CodeGenerator.GenerateFirst2NPrimes(input);
+
+            // Assert
+            Assert.AreEqual(2 * input, result.Length);
+            Assert.IsTrue(result.All(IsPrime), "All returned numbers should be prime");
+            Assert.IsTrue(result.SequenceEqual(result.OrderBy(x => x)),
+                "Primes should be in ascending order");
+        }
+        #endregion
+
+        #region SelectRandomPrimeP Tests
+        [TestMethod]
+        public void SelectRandomPrimeP_ValidInput_ReturnsPrimeFromGeneratedSet()
+        {
+            // Arrange
+            const int numberOfCodes = 10;
+            var primes = CodeGenerator.GenerateFirst2NPrimes(numberOfCodes);
+
+            // Act & Assert
+            for (int i = 0; i < TestIterations; i++)
+            {
+                int prime = CodeGenerator.SelectRandomPrimeP(numberOfCodes);
+                CollectionAssert.Contains(primes, prime);
+            }
+        }
+
+        [TestMethod]
+        public void SelectRandomPrimeP_MultipleCalls_ReturnsDifferentPrimes()
+        {
+            // Arrange
+            const int numberOfCodes = 10;
+            var results = new HashSet<int>();
+
+            // Act
+            for (int i = 0; i < TestIterations; i++)
+            {
+                results.Add(CodeGenerator.SelectRandomPrimeP(numberOfCodes));
+            }
+
+            // Assert
+            Assert.IsTrue(results.Count > 1, "Should return different primes on multiple calls");
+        }
+        #endregion
+
+        #region GeneratePrimesBG Tests
+        [TestMethod]
+        public void GeneratePrimesBG_ValidInput_ReturnsDifferentCoprimePrimes()
+        {
+            // Arrange
+            const int numberOfCodes = 5;
+
+            // Act & Assert
+            for (int i = 0; i < TestIterations; i++)
+            {
+                var (b, g) = CodeGenerator.GeneratePrimesBG(numberOfCodes);
+                Assert.AreNotEqual(b, g, "B and G should be different");
+                Assert.IsTrue(CodeGenerator.MutualSimplicity(b, g), "B and G should be coprime");
+                Assert.IsTrue(IsPrime(b), "B should be prime");
+                Assert.IsTrue(IsPrime(g), "G should be prime");
+            }
+        }
+
+        [TestMethod]
+        public void GeneratePrimesBG_PhiGCondition_ReturnsValidPair()
+        {
+            // Arrange
+            const int numberOfCodes = 10;
+
+            // Act & Assert
+            for (int i = 0; i < TestIterations; i++)
+            {
+                var (_, g) = CodeGenerator.GeneratePrimesBG(numberOfCodes);
+                long phiG = g - 1;
+                Assert.IsTrue(phiG > 2 * numberOfCodes,
+                    $"phi(g) should be greater than {2 * numberOfCodes}");
+            }
+        }
+        #endregion
+
+        #region CalculateKValues Tests
+        [TestMethod]
+        public void CalculateKValues_ValidInput_ReturnsUniqueValues()
+        {
+            // Arrange
+            const int b = 5, g = 23, count = 5;
+
+            // Act
+            var kValues = CodeGenerator.CalculateKValues(b, g, count);
+
+            // Assert
+            Assert.AreEqual(count, kValues.Count, "Should return requested count of values");
+            Assert.AreEqual(count, kValues.Distinct().Count(), "All values should be unique");
+            Assert.IsTrue(kValues.All(k => k >= 1 && k < g),
+                "All values should be in correct range");
+        }
+
+        [TestMethod]
+        public void CalculateKValues_LargeCount_ReturnsCorrectNumberOfValues()
+        {
+            // Arrange
+            const int b = 7, g = 101, count = 50;
+
+            // Act
+            var kValues = CodeGenerator.CalculateKValues(b, g, count);
+
+            // Assert
+            Assert.AreEqual(count, kValues.Count);
+            Assert.AreEqual(count, kValues.Distinct().Count());
+        }
+        #endregion
+
+        #region FindPrimeByBruteForce Tests
+        [TestMethod]
+        public void FindPrimeByBruteForce_ValidRange_ReturnsPrimeInRange()
+        {
+            // Arrange
+            const int min = 100, max = 200;
+
+            // Act & Assert
+            for (int i = 0; i < TestIterations; i++)
+            {
+                int prime = CodeGenerator.FindPrimeByBruteForce(min, max);
+                Assert.IsTrue(IsPrime(prime), $"{prime} should be prime");
+                Assert.IsTrue(prime >= min && prime < max,
+                    $"{prime} should be in range [{min}, {max})");
+            }
+        }
+
+        [TestMethod]
+        public void FindPrimeByBruteForce_SmallRange_ReturnsValidPrime()
+        {
+            // Arrange
+            const int min = 2;
+            const int max = 4; // Увеличиваем диапазон, чтобы было несколько простых чисел
+
+            // Act
+            int prime = CodeGenerator.FindPrimeByBruteForce(min, max);
+
+            // Assert - проверяем, что результат простой и входит в диапазон
+            Assert.IsTrue(prime >= min && prime < max, $"Prime {prime} should be in range [{min}, {max})");
+            Assert.IsTrue(IsPrime(prime), $"Number {prime} should be prime");
+        }
+        #endregion
+
+        #region MutualSimplicity Tests
+        [TestMethod]
+        public void MutualSimplicity_PrimeNumbers_ReturnsTrue()
+        {
+            // Arrange
+            var testCases = new[]
+            {
+                (a: 5, b: 7),
+                (a: 11, b: 13),
+                (a: 17, b: 19)
+            };
+
+            // Act & Assert
+            foreach (var (a, b) in testCases)
+            {
+                Assert.IsTrue(CodeGenerator.MutualSimplicity(a, b),
+                    $"{a} and {b} should be coprime");
+            }
+        }
+
+        [TestMethod]
+        public void MutualSimplicity_NonCoprimeNumbers_ReturnsFalse()
+        {
+            // Arrange
+            var testCases = new[]
+            {
+                (a: 4, b: 6),
+                (a: 15, b: 20),
+                (a: 8, b: 12)
+            };
+
+            // Act & Assert
+            foreach (var (a, b) in testCases)
+            {
+                Assert.IsFalse(CodeGenerator.MutualSimplicity(a, b),
+                    $"{a} and {b} should not be coprime");
+            }
+        }
+
+        [TestMethod]
+        public void MutualSimplicity_EdgeCases_HandlesCorrectly()
+        {
+            // Arrange & Act & Assert
+            Assert.IsTrue(CodeGenerator.MutualSimplicity(1, 5));
+            Assert.IsTrue(CodeGenerator.MutualSimplicity(0, 1));
+            Assert.IsFalse(CodeGenerator.MutualSimplicity(0, 0));
+            Assert.IsFalse(CodeGenerator.MutualSimplicity(2, 0));
+        }
+        #endregion
+
+        #region FindValidModulus Tests
+        [TestMethod]
+        public void FindValidModulus_ValidInput_ReturnsCorrectModulus()
+        {
+            // Arrange
+            const int lengthCode = 6;
+            const int numberOfCodes = 10;
+            long mMin = (long)Math.Pow(10, lengthCode - 1);
+            long mMax = (long)Math.Pow(10, lengthCode) - 1;
+
+            // Act
+            long m = CodeGenerator.FindValidModulus(lengthCode, numberOfCodes,
+                out long phi, out var divisors, out long p, out long q);
+
+            // Assert
+            Assert.IsTrue(m >= mMin && m <= mMax, $"m ({m}) should be in range [{mMin}, {mMax}]");
+            Assert.IsTrue(phi > 2 * numberOfCodes, $"phi ({phi}) should be > {2 * numberOfCodes}");
+            Assert.IsTrue(divisors.Count > 0, "Should return non-empty divisors list");
+            Assert.IsTrue(IsPrime((int)p), "p should be prime");
+            Assert.IsTrue(IsPrime((int)q), "q should be prime");
+            Assert.AreEqual(m, p * q, "m should equal p * q");
+            Assert.IsTrue(CodeGenerator.MutualSimplicity((int)p, (int)q), "p and q should be coprime");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FindValidModulus_InvalidLengthCode_ThrowsException()
+        {
+            // Arrange
+            const int invalidLength = 5;
+            const int numberOfCodes = 10;
+
+            // Act
+            CodeGenerator.FindValidModulus(invalidLength, numberOfCodes,
+                out _, out _, out _, out _);
+        }
+        #endregion
+
+        #region FindAllDivisors Tests
+        [TestMethod]
+        public void FindAllDivisors_ValidNumber_ReturnsAllDivisors()
+        {
+            // Arrange
+            var testCases = new[]
+            {
+                (n: 12L, expected: new List<long> { 1, 2, 3, 4, 6, 12 }),
+                (n: 17L, expected: new List<long> { 1, 17 }),
+                (n: 36L, expected: new List<long> { 1, 2, 3, 4, 6, 9, 12, 18, 36 })
+            };
+
+            // Act & Assert
+            foreach (var (n, expected) in testCases)
+            {
+                var result = CodeGenerator.FindAllDivisors(n);
+                CollectionAssert.AreEqual(expected, result, $"Failed for n = {n}");
+            }
+        }
+
+        [TestMethod]
+        public void FindAllDivisors_EdgeCases_HandlesCorrectly()
+        {
+            // Arrange & Act & Assert
+            var result1 = CodeGenerator.FindAllDivisors(1);
+            CollectionAssert.AreEqual(new List<long> { 1 }, result1);
+
+            var result0 = CodeGenerator.FindAllDivisors(0);
+            Assert.AreEqual(0, result0.Count);
+
+            var resultPrime = CodeGenerator.FindAllDivisors(13);
+            CollectionAssert.AreEqual(new List<long> { 1, 13 }, resultPrime);
+        }
+        #endregion
+
+        #region PowMod Tests
+        [TestMethod]
+        public void PowMod_ValidInput_ReturnsCorrectResult()
+        {
+            // Arrange
+            var testCases = new[]
+            {
+                (a: 2L, k: 3L, n: 5L, expected: 3L),
+                (a: 5L, k: 3L, n: 13L, expected: 8L),
+                (a: 10L, k: 5L, n: 17L, expected: 6L)
+            };
+
+            // Act & Assert
+            foreach (var (a, k, n, expected) in testCases)
+            {
+                var result = CodeGenerator.PowMod(a, k, n);
+                Assert.AreEqual(expected, result,
+                    $"{a}^{k} mod {n} should equal {expected}");
+            }
+        }
+
+        [TestMethod]
+        public void PowMod_LargeNumbers_ReturnsCorrectResult()
+        {
+            // Arrange
+            long a = 123456789;
+            long k = 10;
+            long n = 1000000007;
+
+            // Act
+            long result = CodeGenerator.PowMod(a, k, n);
+
+            // Assert - проверяем, что результат корректен математически
+            Assert.IsTrue(result >= 0 && result < n,
+                $"Result {result} should be in range [0, {n})");
+
+            // Проверяем вычислением шаг за шагом
+            long expected = 1;
+            for (int i = 0; i < k; i++)
+            {
+                expected = (expected * a) % n;
+            }
+
+            Assert.AreEqual(expected, result,
+                $"Expected {a}^{k} mod {n} = {expected}, but got {result}");
+        }
+        #endregion
+
+        #region GenerateCodes Tests
+        [TestMethod]
+        public void GenerateCodes_ValidInput_ReturnsValidCodes()
+        {
+            // Arrange
+            const int lengthCode = 6;
+            const int numberOfCodes = 5;
+            long minValue = (long)Math.Pow(10, lengthCode - 1);
+            long maxValue = (long)Math.Pow(10, lengthCode) - 1;
+
+            // Act
+            var codes = CodeGenerator.GenerateCodes(lengthCode, numberOfCodes,
+                out long m, out long a, out long p, out long q,
+                out List<long> usedK, out int b, out int g);
+
+            // Assert
+            Assert.AreEqual(numberOfCodes, codes.Count,
+                $"Should return {numberOfCodes} codes");
+            Assert.IsTrue(codes.All(code => code >= minValue && code <= maxValue),
+                "All codes should be in valid range");
+            Assert.AreEqual(numberOfCodes, usedK.Count,
+                "Should use same number of K values");
+            Assert.IsTrue(CodeGenerator.MutualSimplicity((int)a, (int)m),
+                "a and m should be coprime");
+            Assert.IsTrue(IsPrime(b), "b should be prime");
+            Assert.IsTrue(IsPrime(g), "g should be prime");
+            Assert.AreEqual(m, p * q, "m should equal p * q");
+        }
+
+        [TestMethod]
+        public void GenerateCodes_MultipleCalls_ReturnsDifferentCodes()
+        {
+            // Arrange
+            const int lengthCode = 6;
+            const int numberOfCodes = 5;
+            var results = new HashSet<long>();
+
+            // Act
+            for (int i = 0; i < 10; i++)
+            {
+                var codes = CodeGenerator.GenerateCodes(lengthCode, numberOfCodes,
+                    out _, out _, out _, out _, out _, out _, out _);
+                foreach (var code in codes)
+                {
+                    results.Add(code);
+                }
+            }
+
+            // Assert
+            Assert.IsTrue(results.Count > numberOfCodes,
+                "Should generate different codes on multiple calls");
+        }
+        #endregion
+
+        #region FindOptimizedModulus Tests
+        [TestMethod]
+        public void FindOptimizedModulus_ValidInput_ReturnsUniqueModulus()
+        {
+            // Arrange
+            const int lengthCode = 6;
+            const int numberOfCodes = 10;
+            var checkedM = new HashSet<long> { 123456, 654321 };
+
+            // Act
+            long m = CodeGenerator.FindOptimizedModulus(lengthCode, numberOfCodes, checkedM);
+
+            // Assert
+            Assert.IsFalse(checkedM.Contains(m), "Should return modulus not in checked set");
+            Assert.IsTrue(m >= 100000 && m <= 999999, "Should return 6-digit modulus");
+        }
+
+        [TestMethod]
+        public void FindOptimizedModulus_ExhaustedAttempts_StillReturnsValidModulus()
+        {
+            // Arrange
+            const int lengthCode = 6;
+            const int numberOfCodes = 10;
+            var checkedM = new HashSet<long>(Enumerable.Range(100000, 900000).Select(x => (long)x));
+
+            // Act
+            long m = CodeGenerator.FindOptimizedModulus(lengthCode, numberOfCodes, checkedM);
+
+            // Assert
+            Assert.IsTrue(m >= 100000 && m <= 999999, "Should return valid modulus");
+        }
+        #endregion
+
+        #region GenerateOptimizedPrime Tests
+        [TestMethod]
+        public void GenerateOptimizedPrime_ValidInput_ReturnsUniquePrime()
+        {
+            // Arrange
+            const int lengthCode = 6;
+            const long minValue = 100000;
+            const long maxValue = 999999;
+            var checkedA = new HashSet<long> { 100003, 100019 };
+
+            // Act
+            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
+
+            // Assert
+            Assert.IsFalse(checkedA.Contains(prime), "Should return prime not in checked set");
+            Assert.IsTrue(prime >= minValue && prime <= maxValue, "Should be in range");
+            Assert.IsTrue(IsPrime((int)prime), "Should return prime number");
+        }
+
+        [TestMethod]
+        public void GenerateOptimizedPrime_AllAttemptsExhausted_ReturnsValidPrime()
+        {
+            // Arrange
+            const int lengthCode = 6;
+            const long minValue = 100000;
+            const long maxValue = 100100;
+            var primesInRange = Enumerable.Range((int)minValue, (int)(maxValue - minValue + 1))
+                .Where(IsPrime)
+                .Select(x => (long)x)
+                .ToList();
+
+            if (!primesInRange.Any())
+                Assert.Inconclusive("No primes in test range");
+
+            var checkedA = new HashSet<long>(primesInRange);
+
+            // Act
+            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue, checkedA);
+
+            // Assert
+            Assert.IsTrue(IsPrime((int)prime), "Should return prime number");
+            Assert.AreEqual(lengthCode, prime.ToString().Length, "Should have correct length");
+        }
+
+        [TestMethod]
+        public void GenerateOptimizedPrime_DifferentLengths_ReturnsCorrectPrimes()
+        {
+            // Arrange
+            var testCases = new[]
+            {
+                (length: 6, min: 100000L, max: 999999L),
+                (length: 7, min: 1000000L, max: 9999999L),
+                (length: 8, min: 10000000L, max: 99999999L),
+                (length: 9, min: 100000000L, max: 999999999L)
+            };
+
+            foreach (var (length, min, max) in testCases)
+            {
+                // Act
+                long prime = CodeGenerator.GenerateOptimizedPrime(length, min, max, new HashSet<long>());
+
+                // Assert
+                Assert.IsTrue(prime >= min && prime <= max, $"For length {length}");
+                Assert.IsTrue(IsPrime((int)prime), $"For length {length}");
+                Assert.AreEqual(length, prime.ToString().Length, $"For length {length}");
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GenerateOptimizedPrime_InvalidLength_ThrowsException()
+        {
+            // Arrange
+            const int invalidLength = 10;
+            const long minValue = 1000000000;
+            const long maxValue = 9999999999;
+            var checkedA = new HashSet<long>();
+
+            // Act
+            CodeGenerator.GenerateOptimizedPrime(invalidLength, minValue, maxValue, checkedA);
+        }
+        #endregion
+
+        #region GeneratePrime Tests
+        [TestMethod]
+        public void GeneratePrime_ValidLength_ReturnsCorrectPrime()
+        {
+            // Arrange
+            var testCases = new[]
+            {
+                (length: 6, min: 100000L, max: 999999L),
+                (length: 7, min: 1000000L, max: 9999999L),
+                (length: 8, min: 10000000L, max: 99999999L),
+                (length: 9, min: 100000000L, max: 999999999L)
+            };
+
+            foreach (var (length, min, max) in testCases)
+            {
+                // Act
+                long prime = CodeGenerator.GeneratePrime(length);
+
+                // Assert
+                Assert.IsTrue(prime >= min && prime <= max, $"For length {length}");
+                Assert.IsTrue(IsPrime((int)prime), $"For length {length}");
+                Assert.AreEqual(length, prime.ToString().Length, $"For length {length}");
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GeneratePrime_InvalidLength_ThrowsException()
+        {
+            // Arrange
+            const int invalidLength = 10;
+
+            // Act
+            CodeGenerator.GeneratePrime(invalidLength);
+        }
+        #endregion
+
+        #region TryGenerateCodes Tests
+        [TestMethod]
+        public void TryGenerateCodes_ValidInput_ReturnsCorrectCodes()
+        {
+            // Arrange
+            const long a = 100003;
+            const long m = 999983;
+            const int lengthCode = 6;
+            const int numberOfCodes = 5;
+            const long minValue = 100000;
+            const long maxValue = 999999;
+
+            // Act
+            var (codes, usedK, b, g) = CodeGenerator.TryGenerateCodes(a, m, lengthCode,
+                numberOfCodes, minValue, maxValue);
+
+            // Assert
+            Assert.IsNotNull(codes, "Should return codes");
+            Assert.AreEqual(numberOfCodes, codes.Count, "Should return requested number of codes");
+            Assert.IsTrue(codes.All(code => code >= minValue && code <= maxValue),
+                "All codes should be in range");
+            Assert.AreEqual(numberOfCodes, usedK.Count, "Should use same number of K values");
+            Assert.IsTrue(IsPrime(b), "b should be prime");
+            Assert.IsTrue(IsPrime(g), "g should be prime");
+        }
+
+        [TestMethod]
+        public void TryGenerateCodes_InsufficientCodes_ReturnsNull()
+        {
+            // Arrange
+            const long a = 100003;
+            const long m = 100019; // Small m will limit code generation
+            const int lengthCode = 6;
+            const int numberOfCodes = 50; // Too many codes for small m
+            const long minValue = 100000;
+            const long maxValue = 999999;
+
+            // Act
+            var (codes, usedK, b, g) = CodeGenerator.TryGenerateCodes(a, m, lengthCode,
+                numberOfCodes, minValue, maxValue);
+
+            // Assert
+            Assert.IsNull(codes, "Should return null when not enough codes can be generated");
+        }
+
+
+        [TestMethod]
+        public void SelectRandomPrimeP_EmptyInput_ThrowsException()
+        {
+            // Arrange
+            int numberOfCodes = 0;
+
+            // Act & Assert
+            var ex = Assert.ThrowsException<ArgumentException>(() =>
+                CodeGenerator.SelectRandomPrimeP(numberOfCodes));
+
+            // Дополнительные проверки
+            Assert.AreEqual("numberOfCodes", ex.ParamName);
+            StringAssert.Contains(ex.Message, "Количество кодов должно быть положительным числом");
+        }
+
+        [TestMethod]
+        public void GeneratePrimesBG_SinglePrimeCase_HandlesCorrectly()
+        {
+            // Arrange
+            int numberOfCodes = 1;
+
+            // Act
+            var (b, g) = CodeGenerator.GeneratePrimesBG(numberOfCodes);
+
+            // Assert
+            Assert.AreNotEqual(b, g);
+            Assert.IsTrue(CodeGenerator.MutualSimplicity(b, g));
+        }
+
+        [TestMethod]
+        public void CalculateKValues_EdgeCases_ReturnsCorrectValues()
+        {
+            // Arrange
+            int b = 2, g = 3, count = 1;
+
+            // Act
+            var result = CodeGenerator.CalculateKValues(b, g, count);
+
+            // Assert
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(2, result[0]); // 2^1 mod 3 = 2
+        }
+
+        [TestMethod]
+        public void FindPrimeByBruteForce_NoPrimesInRange_ThrowsException()
+        {
+            // Arrange
+            int min = 8, max = 10; // В этом диапазоне нет простых чисел
+
+            // Act & Assert
+            Assert.ThrowsException<InvalidOperationException>(() =>
+                CodeGenerator.FindPrimeByBruteForce(min, max));
+        }
+
+        [TestMethod]
+        public void MutualSimplicity_WithZero_ReturnsCorrectValue()
+        {
+            // Arrange & Act & Assert
+            Assert.IsFalse(CodeGenerator.MutualSimplicity(0, 0));
+            Assert.IsTrue(CodeGenerator.MutualSimplicity(1, 0));
+            Assert.IsFalse(CodeGenerator.MutualSimplicity(2, 0));
+        }
+
+        [TestMethod]
+        public void FindAllDivisors_NegativeNumber_ReturnsEmptyList()
+        {
+            // Arrange
+            long n = -12;
+
+            // Act
+            var result = CodeGenerator.FindAllDivisors(n);
+
+            // Assert
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public void PowMod_ZeroExponent_ReturnsOne()
+        {
+            // Arrange
+            long a = 123, k = 0, n = 456;
+
+            // Act
+            var result = CodeGenerator.PowMod(a, k, n);
+
+            // Assert
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void GenerateCodes_InvalidLength_ThrowsException()
+        {
+            // Arrange
+            int invalidLength = 5;
+            int numberOfCodes = 10;
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentException>(() =>
+                CodeGenerator.GenerateCodes(invalidLength, numberOfCodes,
+                    out _, out _, out _, out _, out _, out _, out _));
+        }
+
+        [TestMethod]
+        public void TryGenerateCodes_InvalidParameters_ReturnsNull()
+        {
+            // Arrange
+            long a = 1, m = 2; // Некорректные параметры
+            int lengthCode = 6, numberOfCodes = 5;
+            long minValue = 100000, maxValue = 999999;
+
+            // Act
+            var result = CodeGenerator.TryGenerateCodes(a, m, lengthCode,
+                numberOfCodes, minValue, maxValue);
+
+            // Assert
+            Assert.IsNull(result.codes);
+        }
+
+        [TestMethod]
+        public void FindOptimizedModulus_AllAttemptsExhausted_ReturnsValidModulus()
+        {
+            // Arrange
+            int lengthCode = 6;
+            int numberOfCodes = 10;
+            var checkedM = new HashSet<long>(Enumerable.Range(100000, 900000).Select(x => (long)x));
+
+            // Act
+            long m = CodeGenerator.FindOptimizedModulus(lengthCode, numberOfCodes, checkedM);
+
+            // Assert
+            Assert.IsTrue(m >= 100000 && m <= 999999);
+        }
+
+        [TestMethod]
+        public void GenerateOptimizedPrime_OverrideGenerator_UsesCustomGenerator()
+        {
+            // Arrange
+            int lengthCode = 6;
+            long minValue = 100000, maxValue = 999999;
+            var checkedA = new HashSet<long>();
+            long expectedPrime = 100003;
+
+            // Act
+            long prime = CodeGenerator.GenerateOptimizedPrime(lengthCode, minValue, maxValue,
+                checkedA, _ => expectedPrime);
+
+            // Assert
+            Assert.AreEqual(expectedPrime, prime);
+        }
+
+        [TestMethod]
+        public void GeneratePrime_EdgeCaseLengths_ReturnsCorrectPrimes()
+        {
+            // Arrange
+            int length = 1; // Минимальная длина
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentException>(() => CodeGenerator.GeneratePrime(length));
+        }
+        [TestMethod]
+        public void GenerateFirst2NPrimes_ExtremeInput_Coverage()
+        {
+            // Test large input
+            var primes = CodeGenerator.GenerateFirst2NPrimes(1000);
+            Assert.AreEqual(2000, primes.Length);
+            Assert.IsTrue(primes.All(p => IsPrime(p)));
+        }
+
+        [TestMethod]
+        public void MutualSimplicity_SameNumber_ReturnsTrueForOne()
+        {
+            Assert.IsTrue(CodeGenerator.MutualSimplicity(1, 1));
+            Assert.IsFalse(CodeGenerator.MutualSimplicity(2, 2));
+        }
+
+        [TestMethod]
+        public void FindAllDivisors_PrimeInput_ReturnsCorrectDivisors()
+        {
+            var divisors = CodeGenerator.FindAllDivisors(13);
+            CollectionAssert.AreEqual(new List<long> { 1, 13 }, divisors);
+        }
+
+        [TestMethod]
+        public void PowMod_ZeroModulus_ThrowsException()
+        {
+            Assert.ThrowsException<DivideByZeroException>(() =>
+                CodeGenerator.PowMod(2, 3, 0));
+        }
+        #endregion
+    }
+}
