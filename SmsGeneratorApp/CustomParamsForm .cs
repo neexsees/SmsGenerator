@@ -12,10 +12,11 @@ namespace SmsGeneratorApp
         private Label labelK;
         private ListBox resultListBox;
         private RoundedButton clearButton, saveButton, copyButton;
-        private List<long> resultHistory = new();
+        private HashSet<long> resultHistory = new();
         private long lastA, lastK, lastM;
         private int lastB, lastG, lastD;
-
+        private CheckBox cbLength;
+        private TextBox inputLength;
 
         public CustomParamsForm()
         {
@@ -203,10 +204,11 @@ namespace SmsGeneratorApp
                 };
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllLines(sfd.FileName, resultHistory.ConvertAll(c => c.ToString()));
+                    File.WriteAllLines(sfd.FileName, resultHistory.Select(c => c.ToString()).ToList());
                     MessageBox.Show("Сохранено!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             };
+
 
             Controls.AddRange(new Control[]
             {
@@ -271,8 +273,15 @@ namespace SmsGeneratorApp
                 if (result < 0) result = (result + lastM) % lastM;
 
                 outputBox.Text = $"{result}";
-                resultHistory.Add(result);
-                resultListBox.Items.Add(result);
+                if (resultHistory.Add(result)) // добавится только если уникальный
+                {
+                    resultListBox.Items.Add(result);
+                }
+                else
+                {
+                    MessageBox.Show("Такой код уже был сгенерирован. Повтор исключён.", "Повтор", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
             }
             catch (Exception ex)
             {
