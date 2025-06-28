@@ -1039,7 +1039,7 @@ namespace TestProject1
         #endregion
 
         #region CalculateKValues Additional Tests
-        
+
 
         [TestMethod]
         public void CalculateKValues_WhenCountIsZero_ReturnsEmptyList()
@@ -1234,7 +1234,7 @@ namespace TestProject1
         #endregion
 
         #region Edge Case Tests
-        
+
 
         [TestMethod]
         public void PowMod_ZeroBase_ReturnsZero()
@@ -1321,7 +1321,7 @@ namespace TestProject1
         }
         #endregion
 
-      
+
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
@@ -1333,7 +1333,7 @@ namespace TestProject1
             // Act
             CodeGenerator.GeneratePrime(invalidLength);
         }
-        
+
 
         #region Stress Tests
         [TestMethod]
@@ -1369,6 +1369,20 @@ namespace TestProject1
             }
         }
         #endregion
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FindValidModulus_Length5_ThrowsException()
+        {
+            CodeGenerator.FindValidModulus(5, 10, out _, out _, out _, out _);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FindValidModulus_Length10_ThrowsException()
+        {
+            CodeGenerator.FindValidModulus(10, 10, out _, out _, out _, out _);
+        }
+
 
 
     }
